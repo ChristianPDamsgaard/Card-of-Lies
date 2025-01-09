@@ -12,6 +12,7 @@ public class test {
         inbox.put("Hello World!");
         Object[] tuple = inbox.get(new FormalField(String.class));
         System.out.println(tuple[0]);
+        
     }
 
 }
