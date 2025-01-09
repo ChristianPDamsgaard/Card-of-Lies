@@ -6,7 +6,7 @@ package dtu.dk;
  */
 public class Lobby 
 {
-
+    //make another thread that creates a player, but in the lobby
 
     
 }
