@@ -1,18 +1,21 @@
 package dtu.dk;
 
+import org.jspace.ActualField;
+import org.jspace.FormalField;
+import org.jspace.RemoteSpace;
+import org.jspace.SequentialSpace;
 
-import org.jspace.*;
-
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-public class test {
-
+public class test2 {
     //the main space that contains the other spaces
     //space that keeps track of the game and the players
     //space that keeps track of the players private spaces
+    static SequentialSpace userInputSpace = Main.userInputSpace;
     static TextClassForAllText text = new TextClassForAllText();
+    static RemoteSpace tableSpace;
+
     //variables
     static String id = "";
     static String seatUrl;
@@ -26,11 +29,7 @@ public class test {
         Scanner userInput = new Scanner(System.in);
         int num = 0;
         try {
-            RemoteSpace userInputSpace = new RemoteSpace("tcp://localhost:42069/userInput?keep");
-            RemoteSpace spaceTables = new RemoteSpace("tcp://localhost:42069/table?keep");
-            spaceTables.put("test");
-            System.out.println(Arrays.toString(spaceTables.query(new ActualField("test"))));
-
+            tableSpace = new RemoteSpace("tcp://localhost:42069/table?keep");
             while(true) {
                 if(num >5){
                     break;
@@ -53,8 +52,7 @@ public class test {
                 if(id.equals("player")){
                     userInputSpace.put("userNameResponse", userInput.nextLine().replaceAll(" ", ""));
                     userInputSpace.put("userIdResponse", userInput.nextLine().replaceAll(" ", ""));
-                    spaceTables.put("addPlayer");
-                    spaceTables.get(new ActualField("userHasConnected"));
+                    tableSpace.get(new ActualField("userHasConnected"));
                     System.out.println("yaaaaay ^ _ ^");
 
                 }else if (id.equals("host")) {
@@ -63,6 +61,8 @@ public class test {
                         userInputSpace.put("hostChoice",userInput.nextLine());
                     }
                 }
+                TimeUnit.MILLISECONDS.sleep(30);
+                Main.addPlayer();
             }
             //Player player1 = new Player("anne", "anneMone");
             //Player player2 = new Player("bob", "bobby");

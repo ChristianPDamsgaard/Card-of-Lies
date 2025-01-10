@@ -44,13 +44,14 @@ public class TextClassForAllText {
     void welcomePlayer(){
         try{
             System.out.println("Welcome participant, you will now have to sign this document to ensure that you cannot\u001B[31m sue\u001B[0m us afterwards.");
+            /*
             TimeUnit.SECONDS.sleep(1);
             System.out.print(".");
             TimeUnit.SECONDS.sleep(1);
             System.out.print(".");
             TimeUnit.SECONDS.sleep(1);
             System.out.println(".");
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.SECONDS.sleep(1);*/
             System.out.println("Now you will have to give us your name");
         }catch (Exception e){
 
@@ -86,6 +87,14 @@ public class TextClassForAllText {
 
     void wrongText(){
         System.out.println("The words you typed are not in the package of choices we gave, pls think carefully about your choices and response considering the options");
+    }
+    //game text
+    void waitingForGame(String a){
+        if(a.equals("waiting")){
+            System.out.println("waiting");
+        }else if(a.equals("found")){
+            System.out.println("found");
+        }
     }
 
 

@@ -5,6 +5,7 @@ import org.jspace.FormalField;
 import org.jspace.SequentialSpace;
 import org.jspace.SpaceRepository;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -18,7 +19,7 @@ public class Main {
     static TextClassForAllText text = new TextClassForAllText();
 
     //variables
-    static int seatNumber = 0;
+    static int seatNumber = guestRegistry.size();
     static String id = "";
     static String seatUrl;
     static String nameOfUrl;
@@ -26,12 +27,21 @@ public class Main {
     public static void main(String[] args){
         //add the tableSpace to main space
         mainSpace.add("table",tableSpace);
+        mainSpace.add("userInput", userInputSpace);
         //make server option available
         mainSpace.addGate("tcp://localhost:42069/?keep");
         //starting new thread for the dealer
         new Thread(new Dealer(tableSpace, userInputSpace,guestRegistry)).start();
 
         Scanner userInput = new Scanner(System.in);
+        while(true){
+            try {
+                tableSpace.get(new ActualField("addPlayer"));
+                addPlayer();
+            }catch (Exception e){
+            }
+        }
+        /*
         try {
             new Thread(new Lobby(userInputSpace)).start();
             userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
@@ -48,37 +58,32 @@ public class Main {
             if(id.equals("player")){
                 userInputSpace.put("userNameResponse", userInput.nextLine().replaceAll(" ", ""));
                 userInputSpace.put("userIdResponse", userInput.nextLine().replaceAll(" ", ""));
+                addPlayer();
                 tableSpace.get(new ActualField("userHasConnected"));
                 System.out.println("yaaaaay ^ _ ^");
 
             }else if (id.equals("host")) {
-              while(true){
+                while(true){
                 text.hostInstructions();
                 userInputSpace.put("hostChoice",userInput.nextLine());
-                
+                }
             }
-
-            }
-
-            
-
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
 
-
-
-
-       while(true){
-            addPlayer();
-        }
+         */
     }
 
     //makes it possible to add players to play
     static void addPlayer(){
         try{
             //checks of there is a new player created and gets their id and name
+            System.out.println("iheækzs<hdfælkasjhdfæklhsækldfjhoøsdl");
+            System.out.println(Arrays.toString(tableSpace.query(new ActualField("test"))));
+            System.out.println("SOMEDUCK");
             Object[] seatRequest = tableSpace.get(new ActualField("seatRequest"), new FormalField(String.class), new  FormalField(String.class));
+            System.out.println("CowDuck");
             String guestName = (String) seatRequest[1];
             String playerId = (String) seatRequest[2];
 
@@ -96,11 +101,13 @@ public class Main {
                 //put in mainSpace so that it can be referred to in the player code
                 mainSpace.add(nameOfUrl, newSeatSpace);
                 //put in to the guestRegistry space
-                guestRegistry.put(playerId, seatNumber);
+                guestRegistry.put(playerId, seatNumber, guestName);
                 //increase seatnumber to the next guest
                 seatNumber++;
                 //coordinates with the player to get the url for the new space
                 tableSpace.put("seatNumber", playerId, guestName, seatUrl);
+                System.out.println("DUMBDUCK");
+
             }
         } catch(Exception e){
             System.out.println(e.getMessage());

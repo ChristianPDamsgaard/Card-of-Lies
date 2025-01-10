@@ -1,9 +1,6 @@
 package dtu.dk;
 
-import org.jspace.ActualField;
-import org.jspace.FormalField;
-import org.jspace.SequentialSpace;
-import org.jspace.Space;
+import org.jspace.*;
 
 import java.util.Objects;
 import java.util.Scanner;
@@ -11,11 +8,15 @@ import java.util.concurrent.TimeUnit;
 
 public class Lobby implements  Runnable{
     TextClassForAllText text = new TextClassForAllText();
-    SequentialSpace userInputSpace = new SequentialSpace();
+    RemoteSpace userInputSpace;
 
     //make another thread that creates a player, but in the lobby
-    public Lobby(SequentialSpace universe){
-        this.userInputSpace = universe;
+    public Lobby(){
+        try {
+            this.userInputSpace = new RemoteSpace("tcp://localhost:42069/userInput?keep");
+        }catch (Exception e){
+
+        }
     }
 
     public void startLobby(){
@@ -55,7 +56,8 @@ public class Lobby implements  Runnable{
             text.writeAnId();
             Object[] userResponseToId = userInputSpace.get(new ActualField("userIdResponse"), new FormalField(String.class));
             String id = (String) userResponseToId[1];
-            new Player(name, id);
+            System.out.println("DUCKDUCK");
+            new Thread(new Player(name, id)).start();
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
