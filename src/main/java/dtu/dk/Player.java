@@ -16,8 +16,10 @@ public class Player {
         this.playerName = yourName;
         this.playerId = yourId;
         try {
+            System.out.println("a player has connected to the server");
             //connects to mainSpace
             this.table = new RemoteSpace("tcp://localhost:42069/table?keep");
+            table.put("userHasConnected");
             //makes a seat request
             table.put("seatRequest", playerName, playerId);
             //checks if the requested seat is occupied

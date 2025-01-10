@@ -5,6 +5,8 @@ import org.jspace.FormalField;
 import org.jspace.SequentialSpace;
 import org.jspace.SpaceRepository;
 
+import java.util.Scanner;
+
 public class Main {
     //the main space that contains the other spaces
     static SpaceRepository mainSpace = new SpaceRepository();
@@ -12,9 +14,11 @@ public class Main {
     static SequentialSpace tableSpace = new SequentialSpace();
     //space that keeps track of the players private spaces
     static SequentialSpace guestRegistry = new SequentialSpace();
+    static SequentialSpace userInputSpace = new SequentialSpace();
 
     //variables
     static int seatNumber = 0;
+    static String id = "";
     static String seatUrl;
     static String nameOfUrl;
 
@@ -25,6 +29,36 @@ public class Main {
         mainSpace.addGate("tcp://localhost:42069/?keep");
         //starting new thread for the dealer
         new Thread(new Dealer(tableSpace)).start();
+
+        Scanner userInput = new Scanner(System.in);
+        try {
+            new Thread(new Lobby(userInputSpace)).start();
+            userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
+            while (true) {
+                Object[] result = userInputSpace.getp(new ActualField("personHaveId"), new FormalField(String.class));
+                if (result != null) {
+                    id = (String) result[1];
+                    break;
+                }
+                if(userInputSpace.getp(new ActualField("personDoNotHaveId")) != null){
+                    userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
+                }
+            }
+            if(id.equals("player")){
+                userInputSpace.put("userNameResponse", userInput.nextLine().replaceAll(" ", ""));
+                userInputSpace.put("userIdResponse", userInput.nextLine().replaceAll(" ", ""));
+                tableSpace.get(new ActualField("userHasConnected"));
+                System.out.println("yaaaaay ^ _ ^");
+
+            }else{
+
+            }
+
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
+
 
 
        while(true){
@@ -47,7 +81,7 @@ public class Main {
                 tableSpace.put("occupiedSeat", guestName, playerId);
             } else {
                 //sets up the url for the player and creates a private space for that player and creates a name for the new space to use in url
-                System.out.println("Seating guest " + guestName + " with " + playerId + "at seat " + seatNumber);
+                System.out.println("Seating guest " + guestName + " with " + playerId + " at seat " + seatNumber);
                 seatUrl = ("tcp://localhost:42069/seat" + seatNumber + "?keep");
                 SequentialSpace newSeatSpace = new SequentialSpace();
                 nameOfUrl = "seat" + seatNumber;
