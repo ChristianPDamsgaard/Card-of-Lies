@@ -38,6 +38,7 @@ public class Player {
             //check if the connection is established
             seat.put("we succeeded");
             seat.get(new ActualField("we succeeded"));
+            System.out.println("\u001B[31mSTEEL DUCK");
 
         } catch (Exception e) {
             System.out.println(e.getMessage());

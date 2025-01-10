@@ -15,6 +15,7 @@ public class Main {
     //space that keeps track of the players private spaces
     static SequentialSpace guestRegistry = new SequentialSpace();
     static SequentialSpace userInputSpace = new SequentialSpace();
+    static TextClassForAllText text = new TextClassForAllText();
 
     //variables
     static int seatNumber = 0;
@@ -28,7 +29,7 @@ public class Main {
         //make server option available
         mainSpace.addGate("tcp://localhost:42069/?keep");
         //starting new thread for the dealer
-        new Thread(new Dealer(tableSpace)).start();
+        new Thread(new Dealer(tableSpace, userInputSpace,guestRegistry)).start();
 
         Scanner userInput = new Scanner(System.in);
         try {
@@ -50,9 +51,16 @@ public class Main {
                 tableSpace.get(new ActualField("userHasConnected"));
                 System.out.println("yaaaaay ^ _ ^");
 
-            }else{
+            }else if (id.equals("host")) {
+              while(true){
+                text.hostInstructions();
+                userInputSpace.put("hostChoice",userInput.nextLine());
+                
+            }
 
             }
+
+            
 
         }catch (Exception e){
             System.out.println(e.getMessage());

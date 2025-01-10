@@ -16,7 +16,7 @@ public class TextClassForAllText {
             if(textSpeed <= 0){
                 textSpeed = 0;
             }
-            System.out.print(some[i]);
+            System.out.print("\u001B[33m"+some[i]);
             try {
                 TimeUnit.MILLISECONDS.sleep(25);
                 textSpeed -= 5;
@@ -25,11 +25,25 @@ public class TextClassForAllText {
             }
         }
         System.out.println();
-        System.out.println("Please type h for host and p for participant.");
+        System.out.println("\u001B[0mPlease type h for host and p for participant.");
     }
+    void smoothText(String myString){ //for later
+        for(int i = 0; i < myString.length();i++){
+            System.out.print(myString.charAt(i));
+            try{
+                TimeUnit.MILLISECONDS.sleep(25);
+
+            } catch(Exception e){
+
+            }
+        }
+
+    }
+
+
     void welcomePlayer(){
         try{
-            System.out.println("Welcome participant, you will now have to sign this document to ensure that you cannot sue us afterwards.");
+            System.out.println("Welcome participant, you will now have to sign this document to ensure that you cannot\u001B[31m sue\u001B[0m us afterwards.");
             TimeUnit.SECONDS.sleep(1);
             System.out.print(".");
             TimeUnit.SECONDS.sleep(1);
@@ -58,8 +72,21 @@ public class TextClassForAllText {
 
         }
     }
+    void hostInstructions(){
+        System.out.println("Instructions"); // Carsten can fylder bagefter! 
+    /* HVAD KAN HOSTEN? 
+     * starte spillet? (aktiver dealer)- s
+     * Se spillere og deres information (id, sædenummer & navn)- p
+     * Bestemme gamemode- g
+     * kick spillere (måske i fremtiden)- k
+     * 
+    */
+
+    }
+
     void wrongText(){
         System.out.println("The words you typed are not in the package of choices we gave, pls think carefully about your choices and response considering the options");
     }
+
 
 }
