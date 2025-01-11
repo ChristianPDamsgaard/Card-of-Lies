@@ -74,7 +74,7 @@ public class TextClassForAllText {
         }
     }
     void hostInstructions(){
-        System.out.println("Instructions"); // Carsten can fylder bagefter! 
+        System.out.println("Instructions there is p and s"); // Carsten can fylder bagefter!
     /* HVAD KAN HOSTEN? 
      * starte spillet? (aktiver dealer)- s
      * Se spillere og deres information (id, sædenummer & navn)- p

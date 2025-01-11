@@ -56,7 +56,6 @@ public class Lobby implements  Runnable{
             text.writeAnId();
             Object[] userResponseToId = userInputSpace.get(new ActualField("userIdResponse"), new FormalField(String.class));
             String id = (String) userResponseToId[1];
-            System.out.println("DUCKDUCK");
             new Thread(new Player(name, id)).start();
         }catch (Exception e){
             System.out.println(e.getMessage());
@@ -65,7 +64,6 @@ public class Lobby implements  Runnable{
 
     public void run(){
         startLobby();
-
     }
     
 }

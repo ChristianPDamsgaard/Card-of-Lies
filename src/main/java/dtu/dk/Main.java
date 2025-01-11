@@ -25,6 +25,7 @@ public class Main {
     static String nameOfUrl;
 
     public static void main(String[] args){
+        System.out.println(1%4);
         //add the tableSpace to main space
         mainSpace.add("table",tableSpace);
         mainSpace.add("userInput", userInputSpace);
@@ -71,7 +72,6 @@ public class Main {
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
-
          */
     }
 
@@ -79,11 +79,7 @@ public class Main {
     static void addPlayer(){
         try{
             //checks of there is a new player created and gets their id and name
-            System.out.println("iheækzs<hdfælkasjhdfæklhsækldfjhoøsdl");
-            System.out.println(Arrays.toString(tableSpace.query(new ActualField("test"))));
-            System.out.println("SOMEDUCK");
             Object[] seatRequest = tableSpace.get(new ActualField("seatRequest"), new FormalField(String.class), new  FormalField(String.class));
-            System.out.println("CowDuck");
             String guestName = (String) seatRequest[1];
             String playerId = (String) seatRequest[2];
 
@@ -101,13 +97,11 @@ public class Main {
                 //put in mainSpace so that it can be referred to in the player code
                 mainSpace.add(nameOfUrl, newSeatSpace);
                 //put in to the guestRegistry space
-                guestRegistry.put(playerId, seatNumber, guestName);
+                guestRegistry.put(playerId, seatNumber, guestName, seatUrl, "guest");
                 //increase seatnumber to the next guest
                 seatNumber++;
                 //coordinates with the player to get the url for the new space
                 tableSpace.put("seatNumber", playerId, guestName, seatUrl);
-                System.out.println("DUMBDUCK");
-
             }
         } catch(Exception e){
             System.out.println(e.getMessage());

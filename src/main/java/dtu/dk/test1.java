@@ -3,12 +3,10 @@ package dtu.dk;
 import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
-import org.jspace.SequentialSpace;
 
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
-public class test2 {
+public class test1 {
 
     //the main space that contains the other spaces
     //space that keeps track of the game and the players
