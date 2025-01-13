@@ -3,16 +3,15 @@ package dtu.dk;
 import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
-import org.jspace.SequentialSpace;
-import org.jspace.Space;
 
-import java.util.Arrays;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Player implements Runnable{
     private String playerName;
     private String playerId;
-    private RemoteSpace seat;
+    private int gunChamper;
+    private RemoteSpace mySpace;
     private RemoteSpace table;
     private String seatUrl;
 
@@ -22,6 +21,8 @@ public class Player implements Runnable{
         Scanner playerInput = new Scanner(System.in);
         this.playerName = yourName;
         this.playerId = yourId;
+        this.gunChamper = 6;
+
     }
 
     public void run(){
@@ -39,34 +40,34 @@ public class Player implements Runnable{
                 System.out.println("your turn received");
                 System.out.println("RUBBERDUCK");
 
-                seat.put("canIAction", playerId);
-                seat.get(new ActualField("doAction"), new ActualField(playerId));
+                mySpace.put("canIAction", playerId);
+                mySpace.get(new ActualField("doAction"), new ActualField(playerId));
 
-                Object[] typeOfTurn =  seat.get(new ActualField("turnType"), new FormalField(Boolean.class));
+                Object[] typeOfTurn =  mySpace.get(new ActualField("turnType"), new FormalField(Boolean.class));
 
                 if((Boolean) typeOfTurn[1]){
-                    Object[] checkForFirstTurn = seat.getp(new ActualField("youAreFirstTurner"), new FormalField(String.class));
+                    Object[] checkForFirstTurn = mySpace.getp(new ActualField("youAreFirstTurner"), new FormalField(String.class));
                     System.out.println("FIRSTDUCK");
                     System.out.println("something about turn");
                     String typeOfTable = (String) checkForFirstTurn[1];
                     System.out.println("you have first turn");
                     //give rules and information about first turn
-                    // play first turn
+                    //play first turn
 
                     //check if move is legal
                     //something about looking at cards or checking cards.
                     //something about playing a card
                     System.out.println("write an action");
-                    seat.put("thisIsMyAction", playerInput.nextLine(), "cards");
+                    mySpace.put("thisIsMyAction", playerInput.nextLine(), "cards");
                 }else{
-                    Object[] checkForTurn = seat.getp(new ActualField("itIsYourTurn"), new FormalField(String.class));
+                    Object[] checkForTurn = mySpace.getp(new ActualField("itIsYourTurn"), new FormalField(String.class));
                     System.out.println("NOTFIRSTDUCK");
                     String typeOfTable = (String) checkForTurn[1];
                     System.out.println("you have the turn");
 
                     //give rules and information about turn
-                    // play turn
-                    // check for legal move
+                    //play turn
+                    //check for legal move
                     //make a choice to discern lie or picking up cards
                     System.out.println("write an action either c or p");
                     String action = playerInput.nextLine();
@@ -75,11 +76,19 @@ public class Player implements Runnable{
                             //if picking up cards
                             //something about looking at cards or checking cards.
                             //something about playing a card
-                            seat.put("thisIsMyAction", playerInput.nextLine(), "cards");
+                            mySpace.put("thisIsMyAction", playerInput.nextLine(), "cards");
                             break;
                         } else if (action.equals("p")) {
                             //if discerning lies
-                            seat.put("thisIsMyAction", playerInput.nextLine(), "punch");
+                            mySpace.put("thisIsMyAction", playerInput.nextLine(), "punch");
+                            if(!rulet(gunChamper)){
+                                gunChamper--; //tjekke om der bliver skudt om det er dig selv eller modstander
+                                System.out.println(gunChamper);
+
+                            }else{
+                                //person dør
+                            }
+
                             break;
                         }
                     }
@@ -115,12 +124,12 @@ public class Player implements Runnable{
             //getting url
             seatUrl = (String) response[3];
             //connecting to new space
-            this.seat = new RemoteSpace(seatUrl);
+            this.mySpace = new RemoteSpace(seatUrl);
             table.put("userHasConnected");
 
             //check if the connection is established
-            seat.put("we succeeded");
-            seat.get(new ActualField("we succeeded"));
+            mySpace.put("we succeeded");
+            mySpace.get(new ActualField("we succeeded"));
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -156,4 +165,23 @@ made for testing purposes
 */
 
 
+    public boolean rulet(int gunChamper){
+
+
+        int bulletPlace = 1;
+        Random some = new Random();
+        int randomNumber = some.nextInt(1,(gunChamper+1));
+        System.out.println(randomNumber);
+        if(bulletPlace ==  randomNumber){
+            System.out.println("rubberduck");
+
+            return true; //player dies
+        }else{
+
+            System.out.println("steelduck");
+
+            //put new amount of free chambers left
+            return false;
+        }
+    }
 }
