@@ -16,7 +16,6 @@ public class Dealer implements Runnable {
 
     private String typeOfTable;
     int amountOfPlayers;
-    private String currentPlayerURL;
 
     RemoteSpace currentPrivatePlayerSpace;
     RemoteSpace privateSpaceOfPlayer0;
@@ -25,8 +24,6 @@ public class Dealer implements Runnable {
     RemoteSpace privateSpaceOfPlayer3;
     RemoteSpace privateSpaceOfPlayer4;
     RemoteSpace privateSpaceOfPlayer5;
-
-    private boolean gameStart = false;
 
     public Dealer(SequentialSpace table, SequentialSpace userInput, SequentialSpace guestlist){
         this.tableSpace = table;
@@ -62,10 +59,9 @@ public class Dealer implements Runnable {
     }
     private void gameStart(int seats){
         int turnCounter = 0;
-        Boolean firstTurn = false;
         try {
             tableSpace.put("gameHasStarted");
-            generatePrivateSpaces();
+            generatePrivateSpaces(seats);
             System.out.println("Game starts!");
             System.out.println("Game mode is set to default!");
             while(true){
@@ -135,36 +131,47 @@ public class Dealer implements Runnable {
 
     }
 
-    void generatePrivateSpaces(){
+    void generatePrivateSpaces(int seats){
+        int counting = 1;
         try{
             Object[] player0 = guestlistSpace.query(new FormalField(String.class), new ActualField(0), new FormalField(String.class), new FormalField(String.class), new ActualField("guest"));
             String urlOfPlayer0 = (String) player0[3];
-            currentPlayerURL = (String) player0[3];
             privateSpaceOfPlayer0 = new RemoteSpace(urlOfPlayer0);
+            counting++;
             Object[] player1 = guestlistSpace.query(new FormalField(String.class), new ActualField(1), new FormalField(String.class), new FormalField(String.class), new ActualField("guest"));
             String urlOfPlayer1 = (String) player1[3];
-            //currentPlayerURL = (String) player1[3];
             privateSpaceOfPlayer1= new RemoteSpace(urlOfPlayer1);
+            if(counting == seats){
+                return;
+            }
+            counting++;
             Object[] player2 = guestlistSpace.query(new FormalField(String.class), new ActualField(2), new FormalField(String.class), new FormalField(String.class), new ActualField("guest"));
             String urlOfPlayer2 = (String) player2[3];
-            //currentPlayerURL = (String) player2[3];
             privateSpaceOfPlayer2= new RemoteSpace(urlOfPlayer2);
-
-            /*
+            if(counting == seats){
+                return;
+            }
+            counting++;
             Object[] player3 = guestlistSpace.query(new FormalField(String.class), new ActualField(3), new FormalField(String.class), new FormalField(String.class), new ActualField("guest"));
             String urlOfPlayer3 = (String) player3[3];
-            currentPlayerURL = (String) player3[3];
             privateSpaceOfPlayer3= new RemoteSpace(urlOfPlayer3);
+            if(counting == seats){
+                return;
+            }
+            counting++;
             Object[] player4 = guestlistSpace.query(new FormalField(String.class), new ActualField(4), new FormalField(String.class), new FormalField(String.class), new ActualField("guest"));
             String urlOfPlayer4 = (String) player4[3];
-            currentPlayerURL = (String) player4[3];
             privateSpaceOfPlayer4= new RemoteSpace(urlOfPlayer4);
+            if(counting == seats){
+                return;
+            }
+            counting++;
             Object[] player5 = guestlistSpace.query(new FormalField(String.class), new ActualField(5), new FormalField(String.class), new FormalField(String.class), new ActualField("guest"));
             String urlOfPlayer5 = (String) player5[3];
-            currentPlayerURL = (String) player5[3];
             privateSpaceOfPlayer5= new RemoteSpace(urlOfPlayer5);
-
-             */
+            if(counting == seats){
+                return;
+            }
         }catch (Exception e){
 
         }
@@ -173,7 +180,6 @@ public class Dealer implements Runnable {
 
     void sendTurn(RemoteSpace playerSpace){
         try{
-            System.out.println(currentPlayerURL);
             playerSpace.put("itIsYourTurn", typeOfTable);
             System.out.println("your turn sent");
             playerSpace.get(new ActualField("canIAction"), new ActualField((String)currentPlayer[0]));
