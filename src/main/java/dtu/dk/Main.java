@@ -5,7 +5,6 @@ import org.jspace.FormalField;
 import org.jspace.SequentialSpace;
 import org.jspace.SpaceRepository;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -25,7 +24,6 @@ public class Main {
     static String nameOfUrl;
 
     public static void main(String[] args){
-        System.out.println(1%4);
         //add the tableSpace to main space
         mainSpace.add("table",tableSpace);
         mainSpace.add("userInput", userInputSpace);
@@ -33,8 +31,9 @@ public class Main {
         mainSpace.addGate("tcp://localhost:42069/?keep");
         //starting new thread for the dealer
         new Thread(new Dealer(tableSpace, userInputSpace,guestRegistry)).start();
-
+        new Thread(new Host()).start();
         Scanner userInput = new Scanner(System.in);
+
         while(true){
             try {
                 tableSpace.get(new ActualField("addPlayer"));
@@ -42,37 +41,6 @@ public class Main {
             }catch (Exception e){
             }
         }
-        /*
-        try {
-            new Thread(new Lobby(userInputSpace)).start();
-            userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
-            while (true) {
-                Object[] result = userInputSpace.getp(new ActualField("personHaveId"), new FormalField(String.class));
-                if (result != null) {
-                    id = (String) result[1];
-                    break;
-                }
-                if(userInputSpace.getp(new ActualField("personDoNotHaveId")) != null){
-                    userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
-                }
-            }
-            if(id.equals("player")){
-                userInputSpace.put("userNameResponse", userInput.nextLine().replaceAll(" ", ""));
-                userInputSpace.put("userIdResponse", userInput.nextLine().replaceAll(" ", ""));
-                addPlayer();
-                tableSpace.get(new ActualField("userHasConnected"));
-                System.out.println("yaaaaay ^ _ ^");
-
-            }else if (id.equals("host")) {
-                while(true){
-                text.hostInstructions();
-                userInputSpace.put("hostChoice",userInput.nextLine());
-                }
-            }
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-         */
     }
 
     //makes it possible to add players to play
