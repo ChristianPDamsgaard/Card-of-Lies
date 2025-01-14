@@ -16,9 +16,13 @@ public class test1 {
     static String id = "";
     static String seatUrl;
     static String nameOfUrl;
+    static String ip;
+    static String postalCode;
 
     public static void main(String[] args){
-
+        ip = "localhost";
+        //ip = "10.209.242.31";
+        postalCode = "42069";
         //add the tableSpace to main space
         //make server option available
         //starting new thread for the dealer
@@ -26,7 +30,7 @@ public class test1 {
         try {
             RemoteSpace userInputSpace = new RemoteSpace("tcp://localhost:42069/userInput?keep");
             RemoteSpace spaceTables = new RemoteSpace("tcp://localhost:42069/table?keep");
-            new Thread(new Lobby()).start();
+            new Thread(new Lobby(ip, postalCode)).start();
             //Player player0 = new Player("frank", "frank1");
             userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
             while (true) {

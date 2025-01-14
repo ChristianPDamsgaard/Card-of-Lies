@@ -14,14 +14,18 @@ public class Player implements Runnable{
     private RemoteSpace mySpace;
     private RemoteSpace table;
     private String seatUrl;
+    private String ip;
+    private String postalCode;
 
     private TextClassForAllText text = new TextClassForAllText();
 
-    public Player(String yourName, String yourId){
+    public Player(String yourName, String yourId, String ip, String postalCode){
         Scanner playerInput = new Scanner(System.in);
         this.playerName = yourName;
         this.playerId = yourId;
         this.gunChamper = 6;
+        this.ip = ip;
+        this.postalCode = postalCode;
 
     }
 
@@ -110,7 +114,7 @@ public class Player implements Runnable{
         try {
             System.out.println("a player has connected to the server");
             //connects to mainSpace
-            table = new RemoteSpace("tcp://localhost:42069/table?keep");
+            table = new RemoteSpace("tcp://" + ip+":"+ postalCode + "/table?keep");
             //makes a seat request
             table.put("seatRequest", playerName, playerId);
             //checks if the requested seat is occupied

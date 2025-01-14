@@ -7,13 +7,17 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class Lobby implements  Runnable{
+    private String ip;
+    private String postal;
     TextClassForAllText text = new TextClassForAllText();
     RemoteSpace userInputSpace;
 
     //make another thread that creates a player, but in the lobby
-    public Lobby(){
+    public Lobby(String ip, String postal){
+        this.ip = ip;
+        this.postal = postal;
         try {
-            this.userInputSpace = new RemoteSpace("tcp://localhost:42069/userInput?keep");
+            this.userInputSpace = new RemoteSpace("tcp://" + ip + ":" + postal + "/userInput?keep");
         }catch (Exception e){
 
         }
@@ -56,7 +60,7 @@ public class Lobby implements  Runnable{
             text.writeAnId();
             Object[] userResponseToId = userInputSpace.get(new ActualField("userIdResponse"), new FormalField(String.class));
             String id = (String) userResponseToId[1];
-            new Thread(new Player(name, id)).start();
+            new Thread(new Player(name, id, ip, postal)).start();
         }catch (Exception e){
             System.out.println(e.getMessage());
         }

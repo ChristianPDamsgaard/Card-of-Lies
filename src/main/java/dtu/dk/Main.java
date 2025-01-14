@@ -22,16 +22,22 @@ public class Main {
     static String id = "";
     static String seatUrl;
     static String nameOfUrl;
+    static String ip;
+    static String postalCode;
 
     public static void main(String[] args){
+        ip = "localhost";
+        //ip = "10.209.242.31";
+        postalCode = "42069";
+
         //add the tableSpace to main space
         mainSpace.add("table",tableSpace);
         mainSpace.add("userInput", userInputSpace);
         //make server option available
-        mainSpace.addGate("tcp://localhost:42069/?keep");
+        mainSpace.addGate("tcp://" + "ip"+":"+ postalCode + "/?keep");
         //starting new thread for the dealer
         new Thread(new Dealer(tableSpace, userInputSpace,guestRegistry)).start();
-        new Thread(new Host()).start();
+        new Thread(new Host(ip, postalCode)).start();
         Scanner userInput = new Scanner(System.in);
 
         while(true){
@@ -59,7 +65,7 @@ public class Main {
             } else {
                 //sets up the url for the player and creates a private space for that player and creates a name for the new space to use in url
                 System.out.println("Seating guest " + guestName + " with " + playerId + " at seat " + seatNumber);
-                seatUrl = ("tcp://localhost:42069/seat" + seatNumber + "?keep");
+                seatUrl = ("tcp://" + ip+":"+ postalCode +"/seat" + seatNumber + "?keep");
                 SequentialSpace newSeatSpace = new SequentialSpace();
                 nameOfUrl = "seat" + seatNumber;
                 //put in mainSpace so that it can be referred to in the player code

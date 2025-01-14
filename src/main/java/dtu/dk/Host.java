@@ -13,7 +13,11 @@ public class Host implements  Runnable{
     private TextClassForAllText text = new TextClassForAllText();
     Scanner userInput = new Scanner(System.in);
 
-    public Host(){
+    private String ip;
+    private String postalCode;
+    public Host(String ip, String postal){
+        this.ip = ip;
+        this.postalCode = postal;
     }
 
     public  void run(){
@@ -22,9 +26,9 @@ public class Host implements  Runnable{
         //starting new thread for the dealer
         Scanner userInput = new Scanner(System.in);
         try {
-            RemoteSpace userInputSpace = new RemoteSpace("tcp://localhost:42069/userInput?keep");
-            RemoteSpace spaceTables = new RemoteSpace("tcp://localhost:42069/table?keep");
-            new Thread(new Lobby()).start();
+            RemoteSpace userInputSpace = new RemoteSpace("tcp://" + ip+":"+ postalCode +"/userInput?keep");
+            RemoteSpace spaceTables = new RemoteSpace("tcp://" + ip+":"+ postalCode +"/table?keep");
+            new Thread(new Lobby(ip, postalCode)).start();
             userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
             while (true) {
                 Object[] result = userInputSpace.getp(new ActualField("personHaveId"), new FormalField(String.class));
@@ -46,3 +50,4 @@ public class Host implements  Runnable{
         }
     }
 }
+

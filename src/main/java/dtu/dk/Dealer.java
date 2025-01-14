@@ -238,7 +238,6 @@ public class Dealer implements Runnable {
                 try {
                     currentPrivatePlayerSpace = privateSpaceOfPlayer1;
                     currentPlayer = guestlistSpace.query(new FormalField(String.class), new ActualField(1), new FormalField(String.class), new FormalField(String.class), new ActualField("guest"));
-                    System.out.println("TABLEDUCK");
                 }catch (Exception e){
 
                 }
