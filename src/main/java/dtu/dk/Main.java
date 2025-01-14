@@ -28,7 +28,7 @@ public class Main {
         mainSpace.add("table",tableSpace);
         mainSpace.add("userInput", userInputSpace);
         //make server option available
-        mainSpace.addGate("tcp://localhost:42069/?keep");
+        mainSpace.addGate("tcp://10.209.242.31:42069/?keep");
         //starting new thread for the dealer
         new Thread(new Dealer(tableSpace, userInputSpace,guestRegistry)).start();
         new Thread(new Host()).start();
@@ -59,7 +59,7 @@ public class Main {
             } else {
                 //sets up the url for the player and creates a private space for that player and creates a name for the new space to use in url
                 System.out.println("Seating guest " + guestName + " with " + playerId + " at seat " + seatNumber);
-                seatUrl = ("tcp://localhost:42069/seat" + seatNumber + "?keep");
+                seatUrl = ("tcp://10.209.242.31:42069/seat" + seatNumber + "?keep");
                 SequentialSpace newSeatSpace = new SequentialSpace();
                 nameOfUrl = "seat" + seatNumber;
                 //put in mainSpace so that it can be referred to in the player code

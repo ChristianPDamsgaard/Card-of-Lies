@@ -22,8 +22,8 @@ public class Host implements  Runnable{
         //starting new thread for the dealer
         Scanner userInput = new Scanner(System.in);
         try {
-            RemoteSpace userInputSpace = new RemoteSpace("tcp://localhost:42069/userInput?keep");
-            RemoteSpace spaceTables = new RemoteSpace("tcp://localhost:42069/table?keep");
+            RemoteSpace userInputSpace = new RemoteSpace("tcp://10.209.242.31:42069/userInput?keep");
+            RemoteSpace spaceTables = new RemoteSpace("tcp://10.209.242.31:42069/table?keep");
             new Thread(new Lobby()).start();
             userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
             while (true) {
@@ -46,3 +46,4 @@ public class Host implements  Runnable{
         }
     }
 }
+

@@ -13,7 +13,7 @@ public class Lobby implements  Runnable{
     //make another thread that creates a player, but in the lobby
     public Lobby(){
         try {
-            this.userInputSpace = new RemoteSpace("tcp://localhost:42069/userInput?keep");
+            this.userInputSpace = new RemoteSpace("tcp://10.209.242.31:42069/userInput?keep");
         }catch (Exception e){
 
         }

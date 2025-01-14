@@ -109,7 +109,7 @@ public class Player implements Runnable{
         try {
             System.out.println("a player has connected to the server");
             //connects to mainSpace
-            table = new RemoteSpace("tcp://localhost:42069/table?keep");
+            table = new RemoteSpace("tcp://10.209.242.31:42069/table?keep");
             //makes a seat request
             table.put("seatRequest", playerName, playerId);
             //checks if the requested seat is occupied
