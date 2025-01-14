@@ -28,8 +28,8 @@ public class test3 {
         //starting new thread for the dealer
         Scanner userInput = new Scanner(System.in);
         try {
-            RemoteSpace userInputSpace = new RemoteSpace("tcp://localhost:42069/userInput?keep");
-            RemoteSpace spaceTables = new RemoteSpace("tcp://localhost:42069/table?keep");
+            RemoteSpace userInputSpace = new RemoteSpace("tcp://" + ip+":"+ postalCode + "/userInput?keep");
+            RemoteSpace spaceTables = new RemoteSpace( "tcp://" + ip+":"+ postalCode +"/table?keep");
             new Thread(new Lobby(ip,postalCode)).start();
             //Player player0 = new Player("frank", "frank1");
             userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
