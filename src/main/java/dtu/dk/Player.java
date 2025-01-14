@@ -6,6 +6,7 @@ import org.jspace.RemoteSpace;
 
 import java.util.Random;
 import java.util.Scanner;
+import java.util.List;
 
 public class Player implements Runnable{
     private String playerName;
@@ -61,6 +62,13 @@ public class Player implements Runnable{
                     //check if move is legal
                     //something about looking at cards or checking cards.
                     //something about playing a card
+                    System.out.println("You have the following cards");
+                    List<Object[]> cards = mySpace.queryAll(new ActualField("Card"),new FormalField(Card.class));
+                    for(Object[] tuple:cards){
+                       Card card = (Card) tuple[1];
+                       System.out.print(card.toString()+", ");
+                    }
+                    System.out.println(""); //ends line
                     System.out.println("write an action");
                     mySpace.put("thisIsMyAction", playerInput.nextLine(), "cards");
                 }else{

@@ -19,10 +19,15 @@ public class test1 {
     static String ip;
     static String postalCode;
 
+<<<<<<< Updated upstream
     public static void main(String[] args){
         ip = "localhost";
         //ip = "10.209.242.31";
         postalCode = "42069";
+=======
+public static void main(String[] args){
+
+>>>>>>> Stashed changes
         //add the tableSpace to main space
         //make server option available
         //starting new thread for the dealer

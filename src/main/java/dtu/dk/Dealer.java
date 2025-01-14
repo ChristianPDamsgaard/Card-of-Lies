@@ -5,6 +5,10 @@ import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
 import org.jspace.SequentialSpace;
 
+import java.rmi.Remote;
+import java.util.ArrayList;
+import java.util.Random;
+
 
 public class Dealer implements Runnable {
     private SequentialSpace tableSpace;
@@ -13,9 +17,12 @@ public class Dealer implements Runnable {
     private SequentialSpace gameSpace = new SequentialSpace();
     private Object[] currentPlayer;
     private Object[] playerMove;
+    private Card cards = new Card(null);
+    ArrayList<Card> deck = cards.deck();
 
     private String typeOfTable;
     int amountOfPlayers;
+    int handSize = 4;
 
     RemoteSpace currentPrivatePlayerSpace;
     RemoteSpace privateSpaceOfPlayer0;
@@ -64,6 +71,12 @@ public class Dealer implements Runnable {
             generatePrivateSpaces(seats);
             System.out.println("Game starts!");
             System.out.println("Game mode is set to default!");
+            dealCards(privateSpaceOfPlayer0, handSize); //the hand size is currently 4
+            dealCards(privateSpaceOfPlayer1, handSize);
+            dealCards(privateSpaceOfPlayer2, handSize);
+            //dealCards(privateSpaceOfPlayer3, handSize);
+            //dealCards(privateSpaceOfPlayer4, handSize);
+            //dealCards(privateSpaceOfPlayer5, handSize);
             while(true){
                 //type of table
                 typeOfTable = "kings";
@@ -81,7 +94,7 @@ public class Dealer implements Runnable {
                 do {
 
                     /*
-                     * DEALER MUST DEAL CARDS TO PLAYERS
+                     * DEALER MUST DEAL CARDS TO PLAYERS ^ LOOK UP & SEE
                      * ANNOUNCE WHAT IS PLAYED
                      * START PLAYER 1 TURN
                      * \\\\\\\ PLAYER 1 PLAYS CARD
@@ -283,6 +296,37 @@ public class Dealer implements Runnable {
 
     }
 
+<<<<<<< Updated upstream
 
+=======
+    void dealCards(RemoteSpace playerCardSpace, int handSize){
+        System.out.println("Deck size before dealing: " + deck.size());
+        for(Card card : deck){
+            System.out.print(card);
+        }
+        System.out.println("");
+        Random random = new Random();
+        for(int i = 0; i<handSize; i++){
+            int randomIndex = random.nextInt(deck.size());
+            Card newCard = deck.remove(randomIndex);
+            System.out.println("dealt card" + newCard.toString());
+            try {
+                playerCardSpace.put("Card",newCard);
+            } catch (Exception e) {
+                System.out.println("Error " + e.getMessage());
+            }
+        }
+        }
+    void removeCards(RemoteSpace playerCardSpace){
+        try {
+            while(true){
+            Object[] trashBin = playerCardSpace.get(new ActualField("card"),new FormalField(Card.class));
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+>>>>>>> Stashed changes
 
 }
