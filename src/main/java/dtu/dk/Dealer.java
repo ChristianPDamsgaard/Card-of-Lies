@@ -95,16 +95,24 @@ public class Dealer implements Runnable {
                     System.out.println(seats);
                     System.out.println((turnCounter%seats));
                     whichPlayerTurn((turnCounter%seats));
-                    System.out.println((String) currentPlayer[2] + " " + (String) currentPlayer[0]);
-                    System.out.println((String) currentPlayer[3]);
-                    sendTurn(currentPrivatePlayerSpace);
 
-                    //anounce turn result to all players
+                    currentPrivatePlayerSpace.query(new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]), new ActualField(currentPlayer[2]), new ActualField(currentPlayer[3]),new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]),);
+                    currentPrivatePlayerSpace.ActualField("dead");
+                    if(){
+                        turnCounter++;
+                    }else{
+                        System.out.println((String) currentPlayer[2] + " " + (String) currentPlayer[0]);
+                        System.out.println((String) currentPlayer[3]);
+                        sendTurn(currentPrivatePlayerSpace);
 
-                    gameSpace.get(new ActualField("playerMove"), new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]), new FormalField(String.class), new FormalField(String.class));
-                    //if player dies the
-                    //guestlistSpace.get(new FormalField(String.class), new ActualField(turnCounter%seats), new FormalField(String.class));
-                    turnCounter++;
+                        //anounce turn result to all players
+
+                        gameSpace.get(new ActualField("playerMove"), new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]), new FormalField(String.class), new FormalField(String.class));
+                        //if player dies the
+                        //guestlistSpace.get(new FormalField(String.class), new ActualField(turnCounter%seats), new FormalField(String.class));
+                        turnCounter++;
+                    }
+
                 } while (!playerMove[2].equals("punch"));
                 if(guestlistSpace.size() < 2){
                     //announce win
@@ -270,6 +278,12 @@ public class Dealer implements Runnable {
         }
     }
     void determineTypeOfTable(){
+    }
+
+    public void life(){
 
     }
+
+
+
 }

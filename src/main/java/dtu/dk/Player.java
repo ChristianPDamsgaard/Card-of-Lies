@@ -86,7 +86,8 @@ public class Player implements Runnable{
                                 System.out.println(gunChamper);
 
                             }else{
-                                //person dør
+                                //person dø
+
                             }
 
                             break;
@@ -184,4 +185,7 @@ made for testing purposes
             return false;
         }
     }
+
 }
+
+
