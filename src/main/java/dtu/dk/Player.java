@@ -39,11 +39,14 @@ public class Player implements Runnable{
             System.out.println(seatUrl);
             //welcome to game text
             Scanner playerInput = new Scanner(System.in);
+            mySpace.put("youDied",playerName,playerId,false);
             while(true){
                 //might need lock
                 //check for turn
                 System.out.println("your turn received");
                 System.out.println("RUBBERDUCK");
+
+
 
                 mySpace.put("canIAction", playerId);
                 mySpace.get(new ActualField("doAction"), new ActualField(playerId));
