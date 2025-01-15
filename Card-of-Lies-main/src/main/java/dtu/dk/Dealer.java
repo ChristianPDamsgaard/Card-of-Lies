@@ -81,23 +81,6 @@ public class Dealer implements Runnable {
             //dealCards(privateSpaceOfPlayer4, handSize);
             //dealCards(privateSpaceOfPlayer5, handSize);
             while(true){
-                if(peopleAlive < 2){
-                    while(true)
-                    {
-                        whichPlayerTurn((turnCounter%seats));
-                        deathPlaceHolder = currentPrivatePlayerSpace.query(new ActualField("youDied"),new ActualField(currentPlayer[2]),new ActualField(currentPlayer[0]), new FormalField(Boolean.class));
-                        if(deathPlaceHolder[3].equals(true)){ //mangler condition
-                            turnCounter++;
-                        }else {
-                            //announce win
-                            //something about a player has won
-                            System.out.println("RUBBERDUCKERS");
-                            tableSpace.put("gameHasEnded");
-                            break;
-                        }
-                    }
-                    break;
-                }
                 //type of table
                 typeOfTable = "kings";
                 //deal cards
@@ -138,19 +121,11 @@ public class Dealer implements Runnable {
                         System.out.println(seats);
                         System.out.println((turnCounter%seats));
                         whichPlayerTurn((turnCounter%seats));
-                        deathPlaceHolder = currentPrivatePlayerSpace.query(new ActualField("youDied"),new ActualField(currentPlayer[2]),new ActualField(currentPlayer[0]), new FormalField(Boolean.class));
-                        System.out.println("" + deathPlaceHolder[2] + deathPlaceHolder[3]);
-                        System.out.println("jeg er en haffelaff");
 
-                        if(deathPlaceHolder[3].equals(true)){
-                            System.out.println("jeg er en alf");
-                            turnCounter++;
-                        }else {
-                            //currentPrivatePlayerSpace.query(new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]), new ActualField(currentPlayer[2]), new ActualField(currentPlayer[3]),new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]),);
-                            //currentPrivatePlayerSpace.ActualField("dead");
+                        //currentPrivatePlayerSpace.query(new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]), new ActualField(currentPlayer[2]), new ActualField(currentPlayer[3]),new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]),);
+                        //currentPrivatePlayerSpace.ActualField("dead");
                             System.out.println((String) currentPlayer[2] + " " + (String) currentPlayer[0]);
                             System.out.println((String) currentPlayer[3]);
-                            System.out.println("jeg er en troldmand fra oz");
                             sendTurn(currentPrivatePlayerSpace);
 
                             //anounce turn result to all players
@@ -159,8 +134,24 @@ public class Dealer implements Runnable {
                             //if player dies the
                             //guestlistSpace.get(new FormalField(String.class), new ActualField(turnCounter%seats), new FormalField(String.class));
                             turnCounter++;
-                        }
+
+
                     } while (!playerMove[2].equals("punch"));
+                }
+                if(peopleAlive < 2){
+                    while(true)
+                    {
+                        whichPlayerTurn((turnCounter%seats));
+                        deathPlaceHolder = currentPrivatePlayerSpace.query(new ActualField("youDied"),new ActualField(currentPlayer[2]),new ActualField(currentPlayer[0]), new FormalField(Boolean.class));
+                        if(deathPlaceHolder[3].equals(true)){ //mangler condition
+                            turnCounter++;
+                        }else {
+                            //announce win
+                            //something about a player has won
+                            tableSpace.put("gameHasEnded");
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -266,6 +257,7 @@ public class Dealer implements Runnable {
         }catch (Exception e){
 
         }
+
     }
 
     void whichPlayerTurn(int whichPlayer){

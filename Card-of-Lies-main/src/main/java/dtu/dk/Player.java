@@ -103,7 +103,6 @@ public class Player implements Runnable{
                                 //mySpace.put("youSurvived",playerName,playerId,false);
                             }else{
                                 //person død
-                                mySpace.get(new ActualField("youDied"), new ActualField(playerName), new ActualField(playerId), new ActualField(false));
                                 mySpace.put("youDied",playerName,playerId,true);
                                 mySpace.put("DeathcountUp");
                                 playerDead = true;
@@ -112,7 +111,6 @@ public class Player implements Runnable{
                             break;
                         }
                     }
-
                 }
                 if(playerDead){
                     break;
