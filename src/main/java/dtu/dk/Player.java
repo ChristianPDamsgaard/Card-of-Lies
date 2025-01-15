@@ -16,6 +16,7 @@ public class Player implements Runnable{
     private String seatUrl;
     private String ip;
     private String postalCode;
+    private Boolean playerDead = false;
 
     private TextClassForAllText text = new TextClassForAllText();
 
@@ -90,15 +91,22 @@ public class Player implements Runnable{
                                 System.out.println(gunChamper);
                                 //mySpace.put("youSurvived",playerName,playerId,false);
                             }else{
-                                //person dø
+                                //person død
                                 mySpace.put("youDied",playerName,playerId,true);
+                                mySpace.put("DeathcountUp");
+                                playerDead = true;
+                                System.out.println("you have died, waiting game to end");
                             }
                             break;
                         }
                     }
                 }
+                if(playerDead){
+                    break;
+                }
             }
-
+            mySpace.get(new ActualField("gameHasEnded"));
+            //play again or quit.... maybe return to lobby
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
