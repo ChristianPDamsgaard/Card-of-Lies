@@ -2,6 +2,7 @@ package dtu.dk;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import org.jspace.ActualField;
 import org.jspace.FormalField;
@@ -81,17 +82,20 @@ public class Dealer implements Runnable {
             //dealCards(privateSpaceOfPlayer4, handSize);
             //dealCards(privateSpaceOfPlayer5, handSize);
             while(true){
-                if(peopleAlive < 2){
+                System.out.println(peopleAlive);
+                if(peopleAlive == 1){
                     while(true)
                     {
                         whichPlayerTurn((turnCounter%seats));
                         deathPlaceHolder = currentPrivatePlayerSpace.query(new ActualField("youDied"),new ActualField(currentPlayer[2]),new ActualField(currentPlayer[0]), new FormalField(Boolean.class));
                         if(deathPlaceHolder[3].equals(true)){ //mangler condition
+                            System.out.println("POISONDUCK");
                             turnCounter++;
                         }else {
                             //announce win
                             //something about a player has won
                             System.out.println("RUBBERDUCKERS");
+                            System.out.println("GAME HAS ENDED");
                             tableSpace.put("gameHasEnded");
                             break;
                         }
@@ -108,21 +112,15 @@ public class Dealer implements Runnable {
                 deathPlaceHolder = currentPrivatePlayerSpace.query(new ActualField("youDied"),new ActualField(currentPlayer[2]),new ActualField(currentPlayer[0]), new FormalField(Boolean.class));
 
                 if(deathPlaceHolder[3].equals(true)){ //mangler condition
-                    deathCount = currentPrivatePlayerSpace.getp(new ActualField("DeathcountUp"));
-                    if(deathCount != null){
-                        peopleAlive --;
-                    }
                     turnCounter++;
                 }else {
                     sendFirstTurn(currentPrivatePlayerSpace);
 
                     //reports to a space, (playerMove, the id of player, the seat of player, what player did, if player punch or cards)
                     gameSpace.get(new ActualField("playerMove"), new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]), new FormalField(String.class), new FormalField(String.class));
-                    //anounce turn result to all players
                     turnCounter++;
-
                     do {
-
+                        System.out.println(peopleAlive);
                         /*
                          * DEALER MUST DEAL CARDS TO PLAYERS
                          * ANNOUNCE WHAT IS PLAYED
@@ -134,9 +132,6 @@ public class Dealer implements Runnable {
                          * CONTINUE TURN ORDER
                          *
                          */
-                        System.out.println(turnCounter);
-                        System.out.println(seats);
-                        System.out.println((turnCounter%seats));
                         whichPlayerTurn((turnCounter%seats));
                         deathPlaceHolder = currentPrivatePlayerSpace.query(new ActualField("youDied"),new ActualField(currentPlayer[2]),new ActualField(currentPlayer[0]), new FormalField(Boolean.class));
                         System.out.println("" + deathPlaceHolder[2] + deathPlaceHolder[3]);
@@ -157,7 +152,15 @@ public class Dealer implements Runnable {
 
                             gameSpace.get(new ActualField("playerMove"), new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]), new FormalField(String.class), new FormalField(String.class));
                             //if player dies the
+                            TimeUnit.MILLISECONDS.sleep(50);
                             //guestlistSpace.get(new FormalField(String.class), new ActualField(turnCounter%seats), new FormalField(String.class));
+                            deathCount = currentPrivatePlayerSpace.getp(new ActualField("DeathcountUp"));
+                            System.out.println("WHYDUCK");
+                            if(deathCount != null){
+                                System.out.println("CATTYDUCK");
+                                peopleAlive --;
+                                System.out.println(peopleAlive);
+                            }
                             turnCounter++;
                         }
                     } while (!playerMove[2].equals("punch"));
@@ -170,7 +173,6 @@ public class Dealer implements Runnable {
     }
     private void participants(){
         try{
-            System.out.println(guestlistSpace.queryAll(new FormalField(String.class), new FormalField(Integer.class), new FormalField(String.class), new FormalField(String.class), new ActualField("guest")));
             for(int i = 0; i < guestlistSpace.size(); i++){
                 Object[] partici = guestlistSpace.query(new FormalField(String.class), new ActualField(i), new FormalField(String.class), new FormalField(String.class),new ActualField("guest"));
                 System.out.println("Seating at seat " + i + " we have " + (String) partici[2] + " with id " + (String) partici[0]);
@@ -236,7 +238,6 @@ public class Dealer implements Runnable {
             playerSpace.put("itIsYourTurn", typeOfTable);
             System.out.println("your turn sent");
             playerSpace.get(new ActualField("canIAction"), new ActualField((String)currentPlayer[0]));
-            System.out.println("GHOSTDUCK");
             playerSpace.put("doAction", (String)currentPlayer[0]);
             playerSpace.put("turnType", false);
             playerMove =  playerSpace.get(new ActualField("thisIsMyAction"), new FormalField(String.class), new FormalField(String.class));
@@ -253,9 +254,7 @@ public class Dealer implements Runnable {
     void sendFirstTurn(RemoteSpace playerSpace){
         try{
             playerSpace.put("youAreFirstTurner", typeOfTable);
-            System.out.println("BUTTERDUCK");
             playerSpace.get(new ActualField("canIAction"), new ActualField((String)currentPlayer[0]));
-            System.out.println("GHOSTDUCK");
             playerSpace.put("doAction", (String)currentPlayer[0]);
             playerSpace.put("turnType", true);
             playerMove =  playerSpace.get(new ActualField("thisIsMyAction"), new FormalField(String.class), new FormalField(String.class));
@@ -350,7 +349,4 @@ public class Dealer implements Runnable {
         }
 
     }
-
-
-
 }

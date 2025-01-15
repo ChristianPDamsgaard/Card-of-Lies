@@ -45,9 +45,6 @@ public class Player implements Runnable{
                 //might need lock
                 //check for turn
                 System.out.println("your turn received");
-                System.out.println("RUBBERDUCK");
-
-
 
                 mySpace.put("canIAction", playerId);
                 mySpace.get(new ActualField("doAction"), new ActualField(playerId));
@@ -56,7 +53,6 @@ public class Player implements Runnable{
 
                 if((Boolean) typeOfTurn[1]){
                     Object[] checkForFirstTurn = mySpace.getp(new ActualField("youAreFirstTurner"), new FormalField(String.class));
-                    System.out.println("FIRSTDUCK");
                     System.out.println("something about turn");
                     String typeOfTable = (String) checkForFirstTurn[1];
                     System.out.println("you have first turn");
@@ -77,7 +73,6 @@ public class Player implements Runnable{
                     mySpace.put("thisIsMyAction", playerInput.nextLine(), "cards");
                 }else{
                     Object[] checkForTurn = mySpace.getp(new ActualField("itIsYourTurn"), new FormalField(String.class));
-                    System.out.println("NOTFIRSTDUCK");
                     String typeOfTable = (String) checkForTurn[1];
                     System.out.println("you have the turn");
 
@@ -99,7 +94,6 @@ public class Player implements Runnable{
                             mySpace.put("thisIsMyAction", playerInput.nextLine(), "punch");
                             if(!roulette(gunChamper)){
                                 gunChamper--; //tjekke om der bliver skudt om det er dig selv eller modstander
-                                System.out.println(gunChamper);
                                 //mySpace.put("youSurvived",playerName,playerId,false);
                             }else{
                                 //person død
@@ -152,10 +146,6 @@ public class Player implements Runnable{
             this.mySpace = new RemoteSpace(seatUrl);
             table.put("userHasConnected");
 
-            //check if the connection is established
-            mySpace.put("we succeeded");
-            mySpace.get(new ActualField("we succeeded"));
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -196,15 +186,12 @@ made for testing purposes
         int bulletPlace = 1;
         Random some = new Random();
         int randomNumber = some.nextInt(1,(gunChamper+1));
-        System.out.println(randomNumber);
         if(bulletPlace ==  randomNumber){
             System.out.println("rubberduck");
-
             return true; //player dies
         }else{
 
             System.out.println("steelduck");
-
             //put new amount of free chambers left
             return false;
         }
