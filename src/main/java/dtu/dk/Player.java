@@ -88,12 +88,11 @@ public class Player implements Runnable{
                             if(!rulet(gunChamper)){
                                 gunChamper--; //tjekke om der bliver skudt om det er dig selv eller modstander
                                 System.out.println(gunChamper);
-
+                                //mySpace.put("youSurvived",playerName,playerId,false);
                             }else{
                                 //person dø
-
+                                mySpace.put("youDied",playerName,playerId,true);
                             }
-
                             break;
                         }
                     }
