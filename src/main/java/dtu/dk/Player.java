@@ -89,7 +89,7 @@ public class Player implements Runnable{
                         } else if (action.equals("p")) {
                             //if discerning lies
                             mySpace.put("thisIsMyAction", playerInput.nextLine(), "punch");
-                            if(!rulet(gunChamper)){
+                            if(!roulette(gunChamper)){
                                 gunChamper--; //tjekke om der bliver skudt om det er dig selv eller modstander
                                 System.out.println(gunChamper);
                                 //mySpace.put("youSurvived",playerName,playerId,false);
@@ -180,7 +180,7 @@ made for testing purposes
 */
 
 
-    public boolean rulet(int gunChamper){
+    public boolean roulette(int gunChamper){
 
 
         int bulletPlace = 1;
