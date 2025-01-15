@@ -4,6 +4,7 @@ import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
 
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -65,6 +66,13 @@ public class Player implements Runnable{
                     //check if move is legal
                     //something about looking at cards or checking cards.
                     //something about playing a card
+                    System.out.println("You have the following cards"); //simple print statement
+                    List<Object[]> cards = mySpace.queryAll(new ActualField("Card"),new FormalField(Card.class)); //find all tuples named "Card"
+                    for(Object[] tuple:cards){
+                       Card card = (Card) tuple[1]; //find the card part of the tuple 
+                       System.out.print(card.toString()+", "); // & print it
+                    }
+                    System.out.println(""); //ends line
                     System.out.println("write an action");
                     mySpace.put("thisIsMyAction", playerInput.nextLine(), "cards");
                 }else{
