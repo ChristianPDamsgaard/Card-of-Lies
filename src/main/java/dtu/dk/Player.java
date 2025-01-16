@@ -14,10 +14,11 @@ public class Player implements Runnable{
     private int gunChamper;
     private RemoteSpace mySpace;
     private RemoteSpace table;
-    private String seatUrl;
+    private String url;
     private String ip;
     private String postalCode;
     private Boolean playerDead = false;
+
 
     private TextClassForAllText text = new TextClassForAllText();
 
@@ -37,7 +38,7 @@ public class Player implements Runnable{
             text.waitingForGame("waiting");
             table.query(new ActualField("gameHasStarted"));
             text.waitingForGame("found");
-            System.out.println(seatUrl);
+            System.out.println(url);
             //welcome to game text
             Scanner playerInput = new Scanner(System.in);
             mySpace.put("youDied",playerName,playerId,false);
@@ -111,9 +112,24 @@ public class Player implements Runnable{
                 if(playerDead){
                     break;
                 }
+
             }
             mySpace.get(new ActualField("gameHasEnded"));
             //play again or quit.... maybe return to lobby
+            // Carsten skal lave systemprint til spillet er slut
+
+            String endMessage = playerInput.nextLine().toLowerCase();
+            while(true) {
+                if (endMessage.equals("a")) { //a for again
+                    table.put("playAgain", playerName, playerId, url);
+                    break;
+                } else if (endMessage.equals("e")) { //e for end
+                    //Carsten tak for spillet
+                    break;
+                } else {
+                    //Carsten du skrev ingen passende besked
+                }
+            }
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
@@ -141,9 +157,9 @@ public class Player implements Runnable{
                     new ActualField(playerId), new FormalField(String.class), new FormalField(String.class));
 
             //getting url
-            seatUrl = (String) response[3];
+            url = (String) response[3];
             //connecting to new space
-            this.mySpace = new RemoteSpace(seatUrl);
+            this.mySpace = new RemoteSpace(url);
             table.put("userHasConnected");
 
         } catch (Exception e) {

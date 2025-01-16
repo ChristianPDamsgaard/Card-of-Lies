@@ -52,7 +52,7 @@ public class Dealer implements Runnable {
                         peopleAlive = guestlistSpace.size();
                         System.out.println(guestlistSpace.size()); // print the amount of players who have entered the game
                         gameStart(amountOfPlayers);
-                        break;
+                        continue;
                     case "p": //look at participants
                         participants();
                         continue;
@@ -94,6 +94,7 @@ public class Dealer implements Runnable {
                         }else {
                             //announce win
                             //something about a player has won
+                            guestlistSpace.getAll();
                             System.out.println("RUBBERDUCKERS");
                             System.out.println("GAME HAS ENDED");
                             tableSpace.put("gameHasEnded");
