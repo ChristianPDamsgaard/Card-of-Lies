@@ -115,8 +115,9 @@ public class Dealer implements Runnable {
                 if(deathPlaceHolder[3].equals(true)){ //mangler condition
                     turnCounter++;
                 }else {
+                    System.out.println((String) currentPlayer[2] + " " + (String) currentPlayer[0]);
+                    System.out.println((String) currentPlayer[3]);
                     sendFirstTurn(currentPrivatePlayerSpace);
-
                     //reports to a space, (playerMove, the id of player, the seat of player, what player did, if player punch or cards)
                     gameSpace.get(new ActualField("playerMove"), new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]), new FormalField(String.class), new FormalField(String.class));
                     turnCounter++;
@@ -144,14 +145,15 @@ public class Dealer implements Runnable {
                         }else {
                             //currentPrivatePlayerSpace.query(new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]), new ActualField(currentPlayer[2]), new ActualField(currentPlayer[3]),new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]),);
                             //currentPrivatePlayerSpace.ActualField("dead");
+                            System.out.println("jeg er en troldmand fra oz");
                             System.out.println((String) currentPlayer[2] + " " + (String) currentPlayer[0]);
                             System.out.println((String) currentPlayer[3]);
-                            System.out.println("jeg er en troldmand fra oz");
                             sendTurn(currentPrivatePlayerSpace);
 
                             //anounce turn result to all players
-
+                            System.out.println("the player should make a move");
                             gameSpace.get(new ActualField("playerMove"), new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]), new FormalField(String.class), new FormalField(String.class));
+                            System.out.println("Player 2 has made a move");
                             //if player dies the
                             TimeUnit.MILLISECONDS.sleep(50);
                             //guestlistSpace.get(new FormalField(String.class), new ActualField(turnCounter%seats), new FormalField(String.class));
@@ -241,43 +243,21 @@ public class Dealer implements Runnable {
             System.out.println("Your turn sent to: " + currentPlayer[0]);
     
             // Wait for acknowledgment with timeout
-            boolean acknowledged = false;
-            try {
-                playerSpace.get(new ActualField("canIAction"), new ActualField((String)currentPlayer[0])); 
-                acknowledged = true;
-            } catch (Exception e) {
-                System.out.println("Player did not acknowledge their turn: " + currentPlayer[0]);
-            }
-    
-            // Proceed only if acknowledged
-            if (acknowledged) {
-                // Set up turn parameters
-                playerSpace.put("doAction", (String)currentPlayer[0]);
-                playerSpace.put("turnType", false);
-    
-                // Retrieve and validate player's action
-                try {
-                    Object[] result = playerSpace.queryp(new ActualField("PlayingCard"), new ActualField("TRUE")); 
-                    if(result != null){
-                        playerMove = playerSpace.get(new ActualField("thisIsMyAction"), new FormalField(Card.class), new FormalField(String.class));
-                    }
-                    if (playerMove.length < 3 || playerMove[1] == null || playerMove[2] == null) {
-                        throw new IllegalArgumentException("Invalid player action received.");
-                    }
-                    System.out.println("Player action: " + playerMove[1] + ", " + playerMove[2]);
-    
-                    // Report the action to the game space
-                    gameSpace.put("playerMove", currentPlayer[0], currentPlayer[1], playerMove[1], playerMove[2]);
-                } catch (Exception e) {
-                    System.out.println("Failed to retrieve player action: " + e.getMessage());
-                    gameSpace.put("playerMove", currentPlayer[0], currentPlayer[1], "pass", "unknown");
-                }
-            }
-    
+            System.out.println("it is their turn");
+            playerSpace.get(new ActualField("canIAction"), new ActualField((String)currentPlayer[0]));
+            System.out.println("can they actuib");
+            playerSpace.put("doAction", (String)currentPlayer[0]);
+            playerSpace.put("turnType", false);
+            System.out.println("LOBBYDUCK");
+            playerMove = playerSpace.get(new ActualField("thisIsMyAction"), new FormalField(String.class), new FormalField(String.class));
+            System.out.println("FUNNYDUCK");
+            System.out.println("Player action: " + playerMove[1] + ", " + playerMove[2]);
+            // Report the action to the game space
+            gameSpace.put("playerMove", currentPlayer[0], currentPlayer[1], playerMove[1], playerMove[2]);
+
             // Signal turn completion
             gameSpace.put("turnComplete", currentPlayer[0]);
             System.out.println("Turn completed for player: " + currentPlayer[0]);
-    
         } catch (Exception e) {
             System.out.println("Error in sendTurn: " + e.getMessage());
         }
