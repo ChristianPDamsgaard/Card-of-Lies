@@ -235,19 +235,51 @@ public class Dealer implements Runnable {
     }
 
     void sendTurn(RemoteSpace playerSpace){
-        try{
+        try {
+            // Signal the player's turn
             playerSpace.put("itIsYourTurn", typeOfTable);
-            System.out.println("your turn sent");
-            playerSpace.get(new ActualField("canIAction"), new ActualField((String)currentPlayer[0]));
-            playerSpace.put("doAction", (String)currentPlayer[0]);
-            playerSpace.put("turnType", false);
-            playerMove =  playerSpace.get(new ActualField("thisIsMyAction"), new FormalField(String.class), new FormalField(String.class));
-            //reports to a space, (playerMove, the id of player, the seat of player, what player did, if player punch or cards)
-            gameSpace.put("playerMove", currentPlayer[0], currentPlayer[1], playerMove[1], playerMove[2]);
-            System.out.println("playerMove "+ currentPlayer[0] + " " + currentPlayer[1] + " " + playerMove[1] + " " + playerMove[2]);
-
-        }catch (Exception e){
-
+            System.out.println("Your turn sent to: " + currentPlayer[0]);
+    
+            // Wait for acknowledgment with timeout
+            boolean acknowledged = false;
+            try {
+                playerSpace.get(new ActualField("canIAction"), new ActualField((String)currentPlayer[0])); 
+                acknowledged = true;
+            } catch (Exception e) {
+                System.out.println("Player did not acknowledge their turn: " + currentPlayer[0]);
+            }
+    
+            // Proceed only if acknowledged
+            if (acknowledged) {
+                // Set up turn parameters
+                playerSpace.put("doAction", (String)currentPlayer[0]);
+                playerSpace.put("turnType", false);
+    
+                // Retrieve and validate player's action
+                try {
+                    Object[] result = playerSpace.queryp(new ActualField("PlayingCard"), new ActualField("TRUE")); 
+                    if(result != null){
+                        playerMove = playerSpace.get(new ActualField("thisIsMyAction"), new FormalField(Card.class), new FormalField(String.class));
+                    }
+                    if (playerMove.length < 3 || playerMove[1] == null || playerMove[2] == null) {
+                        throw new IllegalArgumentException("Invalid player action received.");
+                    }
+                    System.out.println("Player action: " + playerMove[1] + ", " + playerMove[2]);
+    
+                    // Report the action to the game space
+                    gameSpace.put("playerMove", currentPlayer[0], currentPlayer[1], playerMove[1], playerMove[2]);
+                } catch (Exception e) {
+                    System.out.println("Failed to retrieve player action: " + e.getMessage());
+                    gameSpace.put("playerMove", currentPlayer[0], currentPlayer[1], "pass", "unknown");
+                }
+            }
+    
+            // Signal turn completion
+            gameSpace.put("turnComplete", currentPlayer[0]);
+            System.out.println("Turn completed for player: " + currentPlayer[0]);
+    
+        } catch (Exception e) {
+            System.out.println("Error in sendTurn: " + e.getMessage());
         }
 
     }
@@ -322,7 +354,8 @@ public class Dealer implements Runnable {
     }
     void determineTypeOfTable(){
     }
-        void dealCards(RemoteSpace playerCardSpace, int handSize){
+
+    void dealCards(RemoteSpace playerCardSpace, int handSize){
         System.out.println("Deck size before dealing: " + deck.size());
         for(Card card : deck){
             System.out.print(card);
@@ -340,6 +373,7 @@ public class Dealer implements Runnable {
             }
         }
         }
+        
     void removeCards(RemoteSpace playerCardSpace){
         try {
             while(true){
@@ -350,4 +384,5 @@ public class Dealer implements Runnable {
         }
 
     }
+    
 }
