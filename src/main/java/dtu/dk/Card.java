@@ -37,7 +37,13 @@ public class Card {
     public void setCard(Rank rank){ //changes a card into a specified Rank & suit. 
         this.rank = rank;
     }
-
+    @Override
+    public boolean equals(Object obj) { //// forgot about this completely, very important!
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Card card = (Card) obj;
+        return rank.equals(card.rank);
+    }
 
 /*     public int getValue(boolean aceAsHigh) { //needs to return a value depending if the ace is highest or lowest
         if ("Ace".equals(rank.getName())) { // Check if it's an Ace

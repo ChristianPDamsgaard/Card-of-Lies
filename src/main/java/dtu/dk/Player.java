@@ -4,6 +4,7 @@ import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -68,8 +69,10 @@ public class Player implements Runnable{
                         //something about playing a card
                         //System.out.println("You have the following cards"); //simple print statement
                         List<Object[]> cards = mySpace.queryAll(new ActualField("Card"), new FormalField(Card.class)); //find all tuples named "Card"
+                        List<Card> hand = new ArrayList<>();
                         int handCounter = 0;
-                        Card[] hand = new Card[cards.size()]; // this should create an array which has your cards it will make the following easier
+                        //Card[] hand = new Card[cards.size()]; // this should create an array which has your cards it will make the following easier
+
                         for (Object[] tuple : cards) {
                             handCounter++;
                             Card card = (Card) tuple[1]; //find the card part of the tuple
@@ -81,16 +84,19 @@ public class Player implements Runnable{
 
                         int cardChoice = selectCard(hand, cards, playerInput);
                         while (true) {
-                            if (cardChoice < 0 || cardChoice >= hand.length) {
+                            if (cardChoice < 0 || cardChoice >= hand.size()) {
                                 System.out.println("Invalid choice. Try again.");
                                 cardChoice = selectCard(hand, cards, playerInput);
                             } else {
                                 break;
                             }
                         }
-                        mySpace.put("thisIsMyAction", hand[cardChoice].toString(), "Cards");
+                        mySpace.put("thisIsMyAction", hand.get(cardChoice).toString(), "Cards");
                         System.out.println("you have now played your turn");
-                        hand[cardChoice] = null;
+                        // Remove a specific tuple with a pattern
+                        Object[] removedTuple = mySpace.get(new ActualField("Card"), new ActualField(cards.get(cardChoice)[1]));
+
+                        
                     } else {
                         Object[] checkForTurn = mySpace.getp(new ActualField("itIsYourTurn"), new FormalField(String.class));
                         String typeOfTable = (String) checkForTurn[1];
@@ -102,7 +108,7 @@ public class Player implements Runnable{
                         System.out.println("You have the following cards"); //simple print statement
                         List<Object[]> cards = mySpace.queryAll(new ActualField("Card"), new FormalField(Card.class)); //find all tuples named "Card"
                         int handCounter = 0;
-                        Card[] hand = new Card[cards.size()]; // this should create an array which has your cards it will make the following easier
+                        List<Card> hand = new ArrayList<>(); // this should create an array which has your cards it will make the following easier
                         for (Object[] tuple : cards) {
                             handCounter++;
                             Card card = (Card) tuple[1]; //find the card part of the tuple
@@ -118,15 +124,16 @@ public class Player implements Runnable{
                             if (action.equals("c")) {
                                 int cardChoice = selectCard(hand, cards, playerInput);
                                 while (true) {
-                                    if (cardChoice < 0 || cardChoice >= hand.length) {
+                                    if (cardChoice < 0 || cardChoice >= hand.size()) {
                                         System.out.println("Invalid choice. Try again.");
                                         cardChoice = selectCard(hand, cards, playerInput);
                                     } else {
                                         break;
                                     }
                                 }
-                                mySpace.put("thisIsMyAction", hand[cardChoice].toString(), "Cards");
-                                hand[cardChoice] = null;
+                                mySpace.put("thisIsMyAction", hand.get(cardChoice).toString(), "Cards");
+                                hand.remove(cardChoice);
+                                Object[] removedTuple = mySpace.get(new ActualField("Card"), new ActualField(cards.get(cardChoice)[1]));
                                 System.out.println("you have now played your turn");
 
                                 break;
@@ -134,7 +141,7 @@ public class Player implements Runnable{
                                 //if discerning lies
                                 mySpace.put("thisIsMyAction", "callOut", "punch");
                                 System.out.println("you have now played your turn");
-
+                                
                                 if (!roulette(gunChamper)) {
                                     gunChamper--; //tjekke om der bliver skudt om det er dig selv eller modstander
                                     //mySpace.put("youSurvived",playerName,playerId,false);
@@ -259,12 +266,12 @@ made for testing purposes
             return false;
         }
     }
-        private int selectCard(Card[] hand, List<Object[]> cards, Scanner playerInput) {
+        private int selectCard(List<Card> hand, List<Object[]> cards, Scanner playerInput) {
         int handCounter = 0; // Initialize counter for hand array
         for (Object[] tuple : cards) {
             Card card = (Card) tuple[1]; // Extract the Card object from the tuple
-            System.out.print((handCounter + 1) + ")" + " " + card.toString() + ", "); // Display the card (1-based index)
-            hand[handCounter] = card; // Add the card to the hand array
+           // System.out.print((handCounter + 1) + ")" + " " + card.toString() + ", "); // Display the card (1-based index)
+            hand.add(card); // Add the card to the hand array
             handCounter++; // Increment the hand counter
         }
         System.out.println("\nPlay a card"); // Prompt for card selection

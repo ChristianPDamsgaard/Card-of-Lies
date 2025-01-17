@@ -31,7 +31,7 @@ public class test {
         try {
             RemoteSpace userInputSpace = new RemoteSpace("tcp://" + ip+":"+ postalCode + "/userInput?keep");
             RemoteSpace spaceTables = new RemoteSpace( "tcp://" + ip+":"+ postalCode +"/table?keep");
-                new Thread(new Lobby(ip,postalCode)).start();
+                new Thread(new Lobby(ip, postalCode)).start();
                 //Player player0 = new Player("frank", "frank1");
                 userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
                 while (true) {
