@@ -7,11 +7,9 @@ import org.jspace.RemoteSpace;
 
 import java.util.Random;
 import java.util.Scanner;
-<<<<<<< Updated upstream
-import java.util.List;
-=======
 import java.util.logging.Handler;
->>>>>>> Stashed changes
+import java.util.List;
+
 
 public class Player implements Runnable{
     private String playerName;
@@ -22,11 +20,8 @@ public class Player implements Runnable{
     private String seatUrl;
     private String ip;
     private String postalCode;
-<<<<<<< Updated upstream
-=======
     private Boolean playerDead = false;
     private Card gameMode = new Card(Card.Rank.KING);
->>>>>>> Stashed changes
 
     private TextClassForAllText text = new TextClassForAllText();
 
@@ -161,13 +156,9 @@ public class Player implements Runnable{
                     }
                 }
             }
-<<<<<<< Updated upstream
-
-=======
             
-            mySpace.get(new ActualField("gameHasEnded"));
+            //mySpace.get(new ActualField("gameHasEnded")); unreachable code?
             //play again or quit.... maybe return to lobby
->>>>>>> Stashed changes
         }catch (Exception e){
             System.out.println(e.getMessage());
         }

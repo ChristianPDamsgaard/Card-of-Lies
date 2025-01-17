@@ -110,8 +110,8 @@ public class Dealer implements Runnable {
                     whichPlayerTurn((turnCounter%seats));
 
                     currentPrivatePlayerSpace.query(new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]), new ActualField(currentPlayer[2]), new ActualField(currentPlayer[3]),new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]),);
-                    currentPrivatePlayerSpace.ActualField("dead");
-                    if(){
+                    //currentPrivatePlayerSpace.ActualField("dead");
+                    if(true){
                         turnCounter++;
                     }else{
                         System.out.println((String) currentPlayer[2] + " " + (String) currentPlayer[0]);
@@ -346,9 +346,6 @@ public class Dealer implements Runnable {
 
     }
 
-<<<<<<< Updated upstream
-
-=======
     void dealCards(RemoteSpace playerCardSpace, int handSize){
         System.out.println("Deck size before dealing: " + deck.size());
         for(Card card : deck){
@@ -377,6 +374,5 @@ public class Dealer implements Runnable {
         }
 
     }
->>>>>>> Stashed changes
 
 }
