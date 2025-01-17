@@ -14,10 +14,13 @@ public class Player implements Runnable{
     private int gunChamper;
     private RemoteSpace mySpace;
     private RemoteSpace table;
-    private String seatUrl;
+    private String url;
     private String ip;
     private String postalCode;
     private Boolean playerDead = false;
+    private Boolean endGame = false;
+    private Card gameMode = new Card(Card.Rank.KING);
+
 
     private TextClassForAllText text = new TextClassForAllText();
 
@@ -37,87 +40,140 @@ public class Player implements Runnable{
             text.waitingForGame("waiting");
             table.query(new ActualField("gameHasStarted"));
             text.waitingForGame("found");
-            System.out.println(seatUrl);
+            System.out.println(url);
             //welcome to game text
             Scanner playerInput = new Scanner(System.in);
             mySpace.put("youDied",playerName,playerId,false);
             while(true){
-                //might need lock
-                //check for turn
-                System.out.println("your turn received");
-                System.out.println("RUBBERDUCK");
+                while(true) {
+                    //might need lock
+                    //check for turn
+                    text.turnReceived();
 
+                    mySpace.put("canIAction", playerId);
+                    mySpace.get(new ActualField("doAction"), new ActualField(playerId));
 
+                    Object[] typeOfTurn = mySpace.get(new ActualField("turnType"), new FormalField(Boolean.class));
 
-                mySpace.put("canIAction", playerId);
-                mySpace.get(new ActualField("doAction"), new ActualField(playerId));
+                    if ((Boolean) typeOfTurn[1]) {
+                        Object[] checkForFirstTurn = mySpace.getp(new ActualField("youAreFirstTurner"), new FormalField(String.class));
+                        String typeOfTable = (String) checkForFirstTurn[1];
+                        text.firstTurn();
+                        //give rules and information about first turn
+                        //play first turn
 
-                Object[] typeOfTurn =  mySpace.get(new ActualField("turnType"), new FormalField(Boolean.class));
+                        //check if move is legal
+                        //something about looking at cards or checking cards.
+                        //something about playing a card
+                        //System.out.println("You have the following cards"); //simple print statement
+                        List<Object[]> cards = mySpace.queryAll(new ActualField("Card"), new FormalField(Card.class)); //find all tuples named "Card"
+                        int handCounter = 0;
+                        Card[] hand = new Card[cards.size()]; // this should create an array which has your cards it will make the following easier
+                        for (Object[] tuple : cards) {
+                            handCounter++;
+                            Card card = (Card) tuple[1]; //find the card part of the tuple
 
-                if((Boolean) typeOfTurn[1]){
-                    Object[] checkForFirstTurn = mySpace.getp(new ActualField("youAreFirstTurner"), new FormalField(String.class));
-                    System.out.println("FIRSTDUCK");
-                    System.out.println("something about turn");
-                    String typeOfTable = (String) checkForFirstTurn[1];
-                    System.out.println("you have first turn");
-                    //give rules and information about first turn
-                    //play first turn
+                            System.out.print(handCounter + ")" + " " + card.toString() + ", ");
+                            // & print it
+                        }
+                        System.out.println(); //new line
 
-                    //check if move is legal
-                    //something about looking at cards or checking cards.
-                    //something about playing a card
-                    System.out.println("You have the following cards"); //simple print statement
-                    List<Object[]> cards = mySpace.queryAll(new ActualField("Card"),new FormalField(Card.class)); //find all tuples named "Card"
-                    for(Object[] tuple:cards){
-                       Card card = (Card) tuple[1]; //find the card part of the tuple 
-                       System.out.print(card.toString()+", "); // & print it
-                    }
-                    System.out.println(""); //ends line
-                    System.out.println("write an action");
-                    mySpace.put("thisIsMyAction", playerInput.nextLine(), "cards");
-                }else{
-                    Object[] checkForTurn = mySpace.getp(new ActualField("itIsYourTurn"), new FormalField(String.class));
-                    System.out.println("NOTFIRSTDUCK");
-                    String typeOfTable = (String) checkForTurn[1];
-                    System.out.println("you have the turn");
-
-                    //give rules and information about turn
-                    //play turn
-                    //check for legal move
-                    //make a choice to discern lie or picking up cards
-                    System.out.println("write an action either c or p");
-                    String action = playerInput.nextLine();
-                    while(true){
-                        if(action.equals("c")){
-                            //if picking up cards
-                            //something about looking at cards or checking cards.
-                            //something about playing a card
-                            mySpace.put("thisIsMyAction", playerInput.nextLine(), "cards");
-                            break;
-                        } else if (action.equals("p")) {
-                            //if discerning lies
-                            mySpace.put("thisIsMyAction", playerInput.nextLine(), "punch");
-                            if(!roulette(gunChamper)){
-                                gunChamper--; //tjekke om der bliver skudt om det er dig selv eller modstander
-                                System.out.println(gunChamper);
-                                //mySpace.put("youSurvived",playerName,playerId,false);
-                            }else{
-                                //person død
-                                mySpace.put("youDied",playerName,playerId,true);
-                                mySpace.put("DeathcountUp");
-                                playerDead = true;
-                                System.out.println("you have died, waiting game to end");
+                        int cardChoice = selectCard(hand, cards, playerInput);
+                        while (true) {
+                            if (cardChoice < 0 || cardChoice >= hand.length) {
+                                System.out.println("Invalid choice. Try again.");
+                                cardChoice = selectCard(hand, cards, playerInput);
+                            } else {
+                                break;
                             }
+                        }
+                        mySpace.put("thisIsMyAction", hand[cardChoice].toString(), "Cards");
+                        text.turnPlayed();
+                        hand[cardChoice] = null;
+                    } else {
+                        Object[] checkForTurn = mySpace.getp(new ActualField("itIsYourTurn"), new FormalField(String.class));
+                        String typeOfTable = (String) checkForTurn[1];
+                        text.otherTurn();
+                        //give rules and information about turn
+                        //play turn
+                        //check for legal move
+                        //make a choice to discern lie or picking up cards
+                        List<Object[]> cards = mySpace.queryAll(new ActualField("Card"), new FormalField(Card.class)); //find all tuples named "Card"
+                        int handCounter = 0;
+                        Card[] hand = new Card[cards.size()]; // this should create an array which has your cards it will make the following easier
+                        for (Object[] tuple : cards) {
+                            handCounter++;
+                            Card card = (Card) tuple[1]; //find the card part of the tuple
+
+                            System.out.print(handCounter + ")" + " " + card.toString() + ", ");
+                            // & print it
+                        }
+                        System.out.println(); //new line
+                        text.chooseOption();
+                        String action = playerInput.nextLine();
+
+                        while (true) {
+                            if (action.equals("c")) {
+                                int cardChoice = selectCard(hand, cards, playerInput);
+                                while (true) {
+                                    if (cardChoice < 0 || cardChoice >= hand.length) {
+                                        text.invalidChoice();
+                                        cardChoice = selectCard(hand, cards, playerInput);
+                                    } else {
+                                        break;
+                                    }
+                                }
+                                mySpace.put("thisIsMyAction", hand[cardChoice].toString(), "Cards");
+                                hand[cardChoice] = null;
+                                text.turnPlayed();
+
+                                break;
+                            } else if (action.equals("p")) {
+                                //if discerning lies
+                                mySpace.put("thisIsMyAction", "callOut", "punch");
+                                text.turnPlayed();
+
+                                if (!roulette(gunChamper)) {
+                                    gunChamper--; //tjekke om der bliver skudt om det er dig selv eller modstander
+                                    //mySpace.put("youSurvived",playerName,playerId,false);
+                                } else {
+                                    //person død
+                                    mySpace.get(new ActualField("youDied"), new ActualField(playerName), new ActualField(playerId), new ActualField(false));
+                                    mySpace.put("youDied", playerName, playerId, true);
+                                    mySpace.put("DeathcountUp");
+                                    playerDead = true;
+                                    text.playerDied();
+                                }
+                                break;
+                            }
+                            text.invalidChoice();
+                            action = playerInput.nextLine();
+                        }
+                        if (playerDead) {
                             break;
                         }
                     }
                 }
-                if(playerDead){
+                mySpace.get(new ActualField("gameHasEnded"));
+                text.gameDone();
+
+                String endMessage = playerInput.nextLine().toLowerCase();
+                while(true) {
+                    if (endMessage.equals("a")) { //a for again
+                        table.put("playAgain", playerName, playerId, url);
+                        break;
+                    } else if (endMessage.equals("e")) { //e for end
+                        endGame = true;
+                        //Carsten tak for spillet
+                        break;
+                    } else {
+                        //Carsten du skrev ingen passende besked
+                    }
+                }
+                if(endGame){
                     break;
                 }
             }
-            mySpace.get(new ActualField("gameHasEnded"));
-            //play again or quit.... maybe return to lobby
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
@@ -130,7 +186,7 @@ public class Player implements Runnable{
 
     void getPrivateSpace(){
         try {
-            System.out.println("a player has connected to the server");
+            text.playerConnected();
             //connects to mainSpace
             table = new RemoteSpace("tcp://" + ip+":"+ postalCode + "/table?keep");
             //makes a seat request
@@ -145,14 +201,10 @@ public class Player implements Runnable{
                     new ActualField(playerId), new FormalField(String.class), new FormalField(String.class));
 
             //getting url
-            seatUrl = (String) response[3];
+            url = (String) response[3];
             //connecting to new space
-            this.mySpace = new RemoteSpace(seatUrl);
+            this.mySpace = new RemoteSpace(url);
             table.put("userHasConnected");
-
-            //check if the connection is established
-            mySpace.put("we succeeded");
-            mySpace.get(new ActualField("we succeeded"));
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -194,19 +246,28 @@ made for testing purposes
         int bulletPlace = 1;
         Random some = new Random();
         int randomNumber = some.nextInt(1,(gunChamper+1));
-        System.out.println(randomNumber);
         if(bulletPlace ==  randomNumber){
             System.out.println("rubberduck");
-
             return true; //player dies
         }else{
 
             System.out.println("steelduck");
-
             //put new amount of free chambers left
             return false;
         }
     }
+        private int selectCard(Card[] hand, List<Object[]> cards, Scanner playerInput) {
+        int handCounter = 0; // Initialize counter for hand array
+        for (Object[] tuple : cards) {
+            Card card = (Card) tuple[1]; // Extract the Card object from the tuple
+            System.out.print((handCounter + 1) + ")" + " " + card.toString() + ", "); // Display the card (1-based index)
+            hand[handCounter] = card; // Add the card to the hand array
+            handCounter++; // Increment the hand counter
+        }
+        System.out.println("\nPlay a card"); // Prompt for card selection
+        return playerInput.nextInt() - 1; // Return 0-based index (subtract 1 for array indexing)
+    }
+    
 
 }
 

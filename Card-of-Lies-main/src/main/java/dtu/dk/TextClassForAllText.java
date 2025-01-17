@@ -97,20 +97,46 @@ public class TextClassForAllText {
         smoothText(message);
         System.out.println();
     }
-    void chooseCard(){
-        String message = "You have to lay down one of your cards:";
+    void firstTurn(){
+        String message = "Because this is the first turn, you can only choose one of your cards.";
         smoothText(message);
         System.out.println();
     }
-    void chooseOption(char[] cards){ // Just using char for now
-        String message = "Do you wish to call them out ('p') or keep playing ('c')?";
+    void otherTurn(){
+        String message = "Your turn!";
+        String message2 = "You have the following cards:";
         smoothText(message);
         System.out.println();
-        printCards(cards);
+        smoothText(message2);
+        System.out.println();
+    }
+    void turnPlayed(){
+        String message = "You have now played your turn.";
+        smoothText(message);
+        System.out.println();
+    }
+    void chooseOption(){ // Just using char for now
+        String message = "Do you wish to call them out ('p') or keep playing ('c')?";
+        smoothText(message);
         System.out.println();
     }
     void playerConnected(){
         System.out.print("A player has connected to the server");
+    }
+    void invalidChoice(){
+        String message = "Invalid choice. Try again.";
+        smoothText(message);
+        System.out.println();
+    }
+    void playerDied(){
+        String message = "You have died. Please sit back and wait until game has ended";
+        smoothText(message);
+        System.out.println();
+    }
+    void gameDone(){
+        String message = "Game has ended! You can now choose to either play again ('a') or end your session ('e'):";
+        smoothText(message);
+        System.out.println();
     }
 
 
@@ -125,10 +151,39 @@ public class TextClassForAllText {
         smoothText(gameModeMessage);
         System.out.println();
     }
-    void turnInfo(int turn, int seat){
-        System.out.println("Turn number: " + turn);
-        System.out.println("Seat: " + seat);
-        System.out.println("Something to do with turn and seats: " + (turn%seat));
+    void gameEnd(){
+        String message = "GAME HAS ENDED!";
+        smoothText(message);
+        System.out.println();
+    }
+    void turnInfo(int seat, String name, String id){
+        String message = "Seating at seat " + seat + " we have " + name + " with id " + id;
+        smoothText(message);
+        System.out.println();
+    }
+    void printPlayerInfo(String name, String id, String url){
+        System.out.println(name + " " + id);
+        System.out.println(url);
+    }
+    void turnSentTo(String player){
+        String message = "Your turn sent to: " + player;
+        smoothText(message);
+        System.out.println();
+    }
+    void playerAction(String playerMove1, String playerMove2){
+        String message = "Player action: " + playerMove1 + ", " + playerMove2;
+        smoothText(message);
+        System.out.println();
+    }
+    void turnComplete(String player){
+        String message = "Turn completed for player: " + player;
+        smoothText(message);
+        System.out.println();
+    }
+    void printPlayerMove(String currentPlayer1, String currentPlayer2, String playerMove1, String playerMove2){
+        String message = "playerMove "+ currentPlayer1 + " " + currentPlayer2 + " " + playerMove1 + " " + playerMove2;
+        smoothText(message);
+        System.out.println();
     }
 
 
@@ -136,20 +191,11 @@ public class TextClassForAllText {
 
     // test
     void hostInstructions(){
-        System.out.println("Instructions there is p and s"); // Carsten can fylder bagefter!
+        System.out.println("As Host you can start the game ('s') or see information on contestants ('p')"); // Carsten can fylde bagefter!
     /* HVAD KAN HOSTEN? 
      * starte spillet? (aktiver dealer)- s
      * Se spillere og deres information (id, sædenummer & navn)- p
-     * Bestemme gamemode- g
-     * kick spillere (måske i fremtiden)- k
-     * 
     */
-
     }
 
-
-
-
-
 }
-

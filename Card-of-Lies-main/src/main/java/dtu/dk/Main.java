@@ -6,6 +6,7 @@ import org.jspace.SequentialSpace;
 import org.jspace.SpaceRepository;
 
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
     //the main space that contains the other spaces
@@ -16,11 +17,13 @@ public class Main {
     static SequentialSpace guestRegistry = new SequentialSpace();
     static SequentialSpace userInputSpace = new SequentialSpace();
     static TextClassForAllText text = new TextClassForAllText();
+    static Object[] playagain;
+
 
     //variables
-    static int seatNumber = guestRegistry.size();
+    static int seatNumber;
     static String id = "";
-    static String seatUrl;
+    static String url;
     static String nameOfUrl;
     static String ip;
     static String postalCode;
@@ -42,8 +45,17 @@ public class Main {
 
         while(true){
             try {
-                tableSpace.get(new ActualField("addPlayer"));
-                addPlayer();
+                playagain = tableSpace.getp(new ActualField("playAgain"), new FormalField(String.class), new FormalField(String.class), new FormalField(String.class));
+                Object[] addPlay = tableSpace.getp(new ActualField("addPlayer"));
+
+                TimeUnit.MILLISECONDS.sleep(10);
+                if(addPlay != null){
+                    addPlayer();
+                }else if(playagain != null){
+                        int seat = guestRegistry.size();
+                        guestRegistry.put(playagain[1], seat, playagain[2], playagain[3], "guest");
+                }
+
             }catch (Exception e){
             }
         }
@@ -52,34 +64,31 @@ public class Main {
     //makes it possible to add players to play
     static void addPlayer(){
         try{
+            seatNumber = guestRegistry.size();
             //checks of there is a new player created and gets their id and name
             Object[] seatRequest = tableSpace.get(new ActualField("seatRequest"), new FormalField(String.class), new  FormalField(String.class));
             String guestName = (String) seatRequest[1];
             String playerId = (String) seatRequest[2];
-
             //checks if a player with same id exist, and then tells the tablespace
             Object[] occupiedSeating = guestRegistry.queryp(new ActualField(playerId), new FormalField(String.class));// instead of room id there should be player id
             if(occupiedSeating != null){
-                System.out.println("This seat is already taken, please take another seat");
+                text.seatTaken();
                 tableSpace.put("occupiedSeat", guestName, playerId);
             } else {
                 //sets up the url for the player and creates a private space for that player and creates a name for the new space to use in url
-                System.out.println("Seating guest " + guestName + " with " + playerId + " at seat " + seatNumber);
-                seatUrl = ("tcp://" + ip+":"+ postalCode +"/seat" + seatNumber + "?keep");
+                text.seatGuest(guestName, playerId, seatNumber);
+                url = ("tcp://" + ip+":"+ postalCode +"/" + guestName + playerId + "?keep");
                 SequentialSpace newSeatSpace = new SequentialSpace();
-                nameOfUrl = "seat" + seatNumber;
+                nameOfUrl = guestName + playerId;
                 //put in mainSpace so that it can be referred to in the player code
                 mainSpace.add(nameOfUrl, newSeatSpace);
                 //put in to the guestRegistry space
-                guestRegistry.put(playerId, seatNumber, guestName, seatUrl, "guest");
-                //increase seatnumber to the next guest
-                seatNumber++;
+                guestRegistry.put(playerId, seatNumber, guestName, url, "guest");
                 //coordinates with the player to get the url for the new space
-                tableSpace.put("seatNumber", playerId, guestName, seatUrl);
+                tableSpace.put("seatNumber", playerId, guestName, url);
             }
         } catch(Exception e){
             System.out.println(e.getMessage());
         }
     }
-
 }

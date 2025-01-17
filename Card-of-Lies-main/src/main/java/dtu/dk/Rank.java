@@ -4,7 +4,7 @@ public class Rank {
     private String name;        
     private int primaryValue;   //in the case of multiple values, then this is the smaller value
     private int secondaryValue;  //in the case of multiple values, then this is the bigger value
-        //////////// OBS I THINK THIS CLASS IS REDUNDANT KEEPING IT JUST IN CASE, BUT EVT. DELETE LATER
+
     
 
     //constructor for cards with one value

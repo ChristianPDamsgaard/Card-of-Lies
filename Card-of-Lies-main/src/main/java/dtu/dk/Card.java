@@ -3,8 +3,8 @@ package dtu.dk;
 import java.util.ArrayList;
 
 public class Card {
-    private enum Rank{JACK, QUEEN, KING, ACE};       // OBS ADD JOKERS LATER, NOTE THAT THERE MUST BE ONLY 2 JOKERS
-    private Rank rank;
+    public enum Rank{JACK, QUEEN, KING, ACE};       // OBS ADD JOKERS LATER, NOTE THAT THERE MUST BE ONLY 2 JOKERS
+    public Rank rank;
     
 
     // Constructor
