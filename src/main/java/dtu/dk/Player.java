@@ -7,6 +7,7 @@ import org.jspace.RemoteSpace;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class Player implements Runnable{
     private String playerName;
@@ -43,6 +44,12 @@ public class Player implements Runnable{
             Scanner playerInput = new Scanner(System.in);
             mySpace.put("youDied",playerName,playerId,false);
             while(true){
+                TimeUnit.MILLISECONDS.sleep(5);
+                Object[] gameEnd = mySpace.queryp(new ActualField("gameHasEnded"));
+                if(gameEnd != null){
+                    break;
+                }
+
                 //might need lock
                 //check for turn
                 System.out.println("your turn received");
@@ -107,19 +114,18 @@ public class Player implements Runnable{
                             break;
                         }
                     }
-
                 }
                 if(playerDead){
                     break;
                 }
-
             }
-            mySpace.get(new ActualField("gameHasEnded"));
+            mySpace.query(new ActualField("gameHasEnded"));
             //play again or quit.... maybe return to lobby
             // Carsten skal lave systemprint til spillet er slut
 
-            String endMessage = playerInput.nextLine().toLowerCase();
+            System.out.println("SOMEDUCK");
             while(true) {
+                String endMessage = playerInput.nextLine().toLowerCase();
                 if (endMessage.equals("a")) { //a for again
                     table.put("playAgain", playerName, playerId, url);
                     break;
