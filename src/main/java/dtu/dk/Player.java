@@ -76,8 +76,11 @@ public class Player implements Runnable{
                         for (Object[] tuple : cards) {
                             handCounter++;
                             Card card = (Card) tuple[1]; //find the card part of the tuple
-
-                            System.out.print(handCounter + ")" + " " + card.toString() + ", ");
+                            String komma = ",";
+                            if(handCounter == cards.size()){
+                                komma = "";
+                            }
+                            System.out.print(handCounter + ")" + " " + card.toString() + komma + " ");
                             // & print it
                         }
                         System.out.println(""); //new line
@@ -111,9 +114,13 @@ public class Player implements Runnable{
                         List<Card> hand = new ArrayList<>(); // this should create an array which has your cards it will make the following easier
                         for (Object[] tuple : cards) {
                             handCounter++;
+                            String komma = ",";
+                            if(handCounter == cards.size()){
+                                komma = "";
+                            }
                             Card card = (Card) tuple[1]; //find the card part of the tuple
 
-                            System.out.print(handCounter + ")" + " " + card.toString() + ", ");
+                            System.out.print(handCounter + ")" + " " + card.toString() + komma + " ");
                             // & print it
                         }
                         System.out.println(""); //new line
