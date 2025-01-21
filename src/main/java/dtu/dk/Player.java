@@ -44,13 +44,13 @@ public class Player implements Runnable{
     public void run(){
         getPrivateSpace();
         try{
+            Scanner playerInput = new Scanner(System.in);
             while(true){
             text.waitingForGame("waiting");
             table.query(new ActualField("gameHasStarted"));
             text.waitingForGame("found");
             System.out.println(url);
             //welcome to game text
-            Scanner playerInput = new Scanner(System.in);
             mySpace.put("youDied",playerName,playerId,false);
                 while(true) {
                     //might need lock
@@ -59,7 +59,7 @@ public class Player implements Runnable{
 
                     mySpace.put("canIAction", playerId);
                     Object[] actionOne = mySpace.get(new ActualField("doAction"), new ActualField(playerId), new FormalField(Boolean.class));
-                    if(!(Boolean)actionOne[2]){
+                    if(!((Boolean)actionOne[2])){
                         break;
                     }
                     Object[] whichType = table.query(new ActualField("tableType"), new FormalField(String.class));
@@ -173,16 +173,10 @@ public class Player implements Runnable{
 
                                 break;
                             } else if (action.equals("p")) {
-                                try {
-                                //if discerning lies
-                                
-                                } catch (Exception e) {
-                                    // TODO: handle exception
-                                }
-                             
                                 mySpace.put("thisIsMyAction", "callOut", "punch");
 
                                 Object[] actionResult = mySpace.get(new ActualField("punchResult"), new FormalField(Boolean.class));
+
                                 if((Boolean) actionResult[1]){
                                     if (!roulette(gunChamper)) {
                                         gunChamper--; //tjekke om der bliver skudt om det er dig selv eller modstander
@@ -191,7 +185,6 @@ public class Player implements Runnable{
                                         //person død
                                         mySpace.get(new ActualField("youDied"), new ActualField(playerName), new ActualField(playerId), new ActualField(false));
                                         mySpace.put("youDied", playerName, playerId, true);
-                                        mySpace.put("DeathcountUp");
                                         table.put("DeathcountUp");
                                         playerDead = true;
                                         text.playerDied();
@@ -206,8 +199,8 @@ public class Player implements Runnable{
                             text.invalidChoice();
                             action = playerInput.nextLine();
                         }
-                        
                         otherPlayerResult = mySpace.get(new ActualField("otherPunchResult"), new FormalField(Boolean.class));
+
                         if((Boolean)otherPlayerResult[1]){
                             if (!roulette(gunChamper)) {
                                 gunChamper--; //tjekke om der bliver skudt om det er dig selv eller modstander
@@ -239,8 +232,8 @@ public class Player implements Runnable{
                 // Carsten skal lave systemprint til spillet er slut
 
                 table.query(new ActualField("gameHasEnded"));
+                text.gameDone();
                 while(true) {
-                    text.gameDone();
                     String endMessage = playerInput.nextLine().toLowerCase();
                     if (endMessage.equals("a")) { //a for again
                         table.put("playAgain",playerId, playerName, url);
@@ -251,6 +244,7 @@ public class Player implements Runnable{
                         //Carsten tak for spillet
                         break;
                     } else {
+                        text.gameDone();
                         //Carsten du skrev ingen passende besked
                     }
                 }
@@ -261,11 +255,6 @@ public class Player implements Runnable{
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
-    }
-
-
-    void playTurn(){
-
     }
 
     void getPrivateSpace(){
@@ -331,7 +320,6 @@ made for testing purposes
         if(bulletPlace ==  randomNumber){
             return true; //player dies
         }else{
-            System.out.println("steelduck");
             //put new amount of free chambers left
             return false;
         }

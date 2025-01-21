@@ -201,7 +201,7 @@ public class TextClassForAllText {
         smoothText(message);
         System.out.println();
     }
-    void printPlayerMove(String currentPlayer1, String currentPlayer2, String playerMove1, String playerMove2){
+    void printPlayerMove(String currentPlayer1, Integer currentPlayer2, String playerMove1, String playerMove2){
         String message = "playerMove "+ currentPlayer1 + " " + currentPlayer2 + " " + playerMove1 + " " + playerMove2;
         smoothText(message);
         System.out.println();

@@ -16,6 +16,7 @@ public class Main {
     //space that keeps track of the players private spaces
     static SequentialSpace guestRegistry = new SequentialSpace();
     static SequentialSpace userInputSpace = new SequentialSpace();
+    static SequentialSpace trashCan = new SequentialSpace();
     static TextClassForAllText text = new TextClassForAllText();
     static Object[] playagain;
 
@@ -36,10 +37,11 @@ public class Main {
         //add the tableSpace to main space
         mainSpace.add("table",tableSpace);
         mainSpace.add("userInput", userInputSpace);
+        mainSpace.add("trash", trashCan);
         //make server option available
         mainSpace.addGate("tcp://" + "ip"+":"+ postalCode + "/?keep");
         //starting new thread for the dealer
-        new Thread(new Dealer(tableSpace, userInputSpace,guestRegistry)).start();
+        new Thread(new Dealer(tableSpace, userInputSpace,guestRegistry, ip, postalCode)).start();
         new Thread(new Host(ip, postalCode)).start();
         Scanner userInput = new Scanner(System.in);
 
