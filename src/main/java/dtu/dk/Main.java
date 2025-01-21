@@ -73,11 +73,11 @@ public class Main {
             //checks if a player with same id exist, and then tells the tablespace
             Object[] occupiedSeating = guestRegistry.queryp(new ActualField(playerId), new FormalField(String.class));// instead of room id there should be player id
             if(occupiedSeating != null){
-                System.out.println("This seat is already taken, please take another seat");
+                text.seatTaken();
                 tableSpace.put("occupiedSeat", guestName, playerId);
             } else {
                 //sets up the url for the player and creates a private space for that player and creates a name for the new space to use in url
-                System.out.println("Seating guest " + guestName + " with " + playerId + " at seat " + seatNumber);
+                text.seatGuest(guestName, playerId, seatNumber);
                 url = ("tcp://" + ip+":"+ postalCode +"/" + guestName + playerId + "?keep");
                 SequentialSpace newSeatSpace = new SequentialSpace();
                 nameOfUrl = guestName + playerId;

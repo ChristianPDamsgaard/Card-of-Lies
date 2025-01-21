@@ -55,7 +55,7 @@ public class Player implements Runnable{
                 while(true) {
                     //might need lock
                     //check for turn
-                    System.out.println("your turn received");
+                    text.turnReceived();
 
                     mySpace.put("canIAction", playerId);
                     Object[] actionOne = mySpace.get(new ActualField("doAction"), new ActualField(playerId), new FormalField(Boolean.class));
@@ -69,9 +69,9 @@ public class Player implements Runnable{
 
                     if ((Boolean) typeOfTurn[1]) {
                         Object[] checkForFirstTurn = mySpace.getp(new ActualField("youAreFirstTurner"), new FormalField(String.class));
-                        System.out.println("something about turn");
+                        text.firstTurn();
                         String typeOfTable = (String) checkForFirstTurn[1];
-                        System.out.println("you have first turn");
+                        
                         //give rules and information about first turn
                         //play first turn
 
@@ -83,8 +83,7 @@ public class Player implements Runnable{
                         List<Card> hand = new ArrayList<>();
                         int handCounter = 0;
                         //Card[] hand = new Card[cards.size()]; // this should create an array which has your cards it will make the following easier
-                        System.out.println("it is the " + typeOfTable + " table");   //Carsten skal lave noget text
-                        System.out.println("");   //Carsten skal lave noget text omkring hvad man skal gøre udfra den info ovenover
+                        text.typeOfTable(typeOfTable); //Carsten skal lave noget text omkring hvad man skal gøre udfra den info ovenover
                         for (Object[] tuple : cards) {
                             handCounter++;
                             Card card = (Card) tuple[1]; //find the card part of the tuple
@@ -95,12 +94,12 @@ public class Player implements Runnable{
                             System.out.print(handCounter + ")" + " " + card.toString() + komma + " ");
                             // & print it
                         }
-                        System.out.println(""); //new line
+                        System.out.println(); //new line
 
                         int cardChoice = selectCard(hand, cards, playerInput);
                         while (true) {
                             if (cardChoice < 0 || cardChoice >= hand.size()) {
-                                System.out.println("Invalid choice. Try again.");
+                                text.invalidChoice();
                                 cardChoice = selectCard(hand, cards, playerInput);
                             } else {
                                 break;
@@ -108,10 +107,10 @@ public class Player implements Runnable{
                         }
 
                         mySpace.put("thisIsMyAction", hand.get(cardChoice).toString(), "Cards");
-                        System.out.println("you have now played your turn");
+                        text.turnPlayed();
                         // Remove a specific tuple with a pattern
                         Object[] removedTuple = mySpace.get(new ActualField("Card"), new ActualField(cards.get(cardChoice)[1]));
-                        System.out.println("MISSINGDUCk");
+                        
                         otherPlayerResult = mySpace.get(new ActualField("otherPunchResult"), new FormalField(Boolean.class));
                         if((Boolean)otherPlayerResult[1]){
                             if (!roulette(gunChamper)) {
@@ -124,18 +123,17 @@ public class Player implements Runnable{
                                 mySpace.put("DeathcountUp");
                                 table.put("DeathcountUp");
                                 playerDead = true;
-                                System.out.println("you have died, waiting game to end");
+                                text.playerDied();
                             }
                         }
                     } else {
                         Object[] checkForTurn = mySpace.getp(new ActualField("itIsYourTurn"), new FormalField(String.class));
                         String typeOfTable = (String) checkForTurn[1];
-                        System.out.println("you have the turn");
+                        text.otherTurn();
                         //give rules and information about turn
                         //play turn
                         //check for legal move
                         //make a choice to discern lie or picking up cards
-                        System.out.println("You have the following cards"); //simple print statement    Carsten skal lave noget text
                         List<Object[]> cards = mySpace.queryAll(new ActualField("Card"), new FormalField(Card.class)); //find all tuples named "Card"
                         int handCounter = 0;
                         List<Card> hand = new ArrayList<>(); // this should create an array which has your cards it will make the following easier
@@ -149,10 +147,9 @@ public class Player implements Runnable{
                             System.out.print(handCounter + ")" + " " + card.toString() + komma + " ");
                             // & print it
                         }
-                        System.out.println(""); //new line
-                        System.out.println("it is the " + typeOfTable + "'s table");   //Carsten skal lave noget text
-                        System.out.println("");   //Carsten skal lave noget text omkring hvad man skal gøre udfra den info ovenover
-                        System.out.println("write an action either c or p");
+                        System.out.println(); //new line
+                        text.typeOfTable(typeOfTable); //Carsten
+                        text.chooseOption();
                         action = playerInput.nextLine();
 
                         while (true) {
@@ -172,7 +169,7 @@ public class Player implements Runnable{
                                 Object[] removedTuple = mySpace.get(new ActualField("Card"), new ActualField(cards.get(cardChoice)[1]));
                                 table.put(new ActualField("discardedCard"), new ActualField(cards.get(cardChoice)[1]));
                                    
-                                System.out.println("you have now played your turn");
+                                text.turnPlayed();
 
                                 break;
                             } else if (action.equals("p")) {
@@ -197,21 +194,20 @@ public class Player implements Runnable{
                                         mySpace.put("DeathcountUp");
                                         table.put("DeathcountUp");
                                         playerDead = true;
-                                        System.out.println("you have died, waiting game to end");
+                                        text.playerDied();
                                     }
                                 }else{
                                     System.out.println(); //Carsten skal lave noget text omkring man har callet en løgn og den anden person bliver straffet
                                 }
 
-                                System.out.println("you have now played your turn");
+                                text.turnPlayed();
                                 break;
                             }
-                            System.out.println("that was not an option, try again");
+                            text.invalidChoice();
                             action = playerInput.nextLine();
                         }
-                        System.out.println("EnMandIDameTøj");
+                        
                         otherPlayerResult = mySpace.get(new ActualField("otherPunchResult"), new FormalField(Boolean.class));
-                        System.out.println("FilipErSåFolt");
                         if((Boolean)otherPlayerResult[1]){
                             if (!roulette(gunChamper)) {
                                 gunChamper--; //tjekke om der bliver skudt om det er dig selv eller modstander
@@ -224,7 +220,7 @@ public class Player implements Runnable{
                                 mySpace.put("DeathcountUp");
                                 table.put("DeathcountUp");
                                 playerDead = true;
-                                System.out.println("you have died, waiting game to end");
+                                text.playerDied();
                                 
                             }
                         }
@@ -239,19 +235,16 @@ public class Player implements Runnable{
                         break;
                     }
                 }
-                System.out.println("PeterErEnKæmpeTaber");
                 //play again or quit.... maybe return to lobby
                 // Carsten skal lave systemprint til spillet er slut
 
                 table.query(new ActualField("gameHasEnded"));
                 while(true) {
-                    System.out.println("press a or e");
+                    text.gameDone();
                     String endMessage = playerInput.nextLine().toLowerCase();
-                    System.out.println("NickErSuperSej");
                     if (endMessage.equals("a")) { //a for again
                         table.put("playAgain",playerId, playerName, url);
                         mySpace.put("youDied",playerName,playerId,false);
-                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                         break;
                     } else if (endMessage.equals("e")) { //e for end
                         endGame = true;
@@ -277,7 +270,7 @@ public class Player implements Runnable{
 
     void getPrivateSpace(){
         try {
-            System.out.println("a player has connected to the server");
+            text.playerConnected();
             //connects to mainSpace
             table = new RemoteSpace("tcp://" + ip+":"+ postalCode + "/table?keep");
             //makes a seat request
@@ -332,13 +325,10 @@ made for testing purposes
 
 
     public boolean roulette(int gunChamper){
-
-
         int bulletPlace = 1;
         Random some = new Random();
         int randomNumber = some.nextInt(1,(gunChamper+1));
         if(bulletPlace ==  randomNumber){
-            System.out.println("rubberduck");
             return true; //player dies
         }else{
             System.out.println("steelduck");
@@ -352,7 +342,7 @@ made for testing purposes
            // System.out.print((handCounter + 1) + ")" + " " + card.toString() + ", "); // Display the card (1-based index)
             hand.add(card); // Add the card to the hand array
         }
-        System.out.println("\nPlay a card"); // Prompt for card selection
+        text.playCard();
         return playerInput.nextInt() - 1; // Return 0-based index (subtract 1 for array indexing)
     }
 }
