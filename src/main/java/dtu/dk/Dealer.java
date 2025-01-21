@@ -3,6 +3,7 @@ package dtu.dk;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.List;
 
 import org.jspace.ActualField;
 import org.jspace.FormalField;
@@ -80,10 +81,12 @@ public class Dealer implements Runnable {
             generatePrivateSpaces(seats);
             System.out.println("Game starts!");
             System.out.println("Game mode is set to default!");
-            dealCards(privateSpaceOfPlayer0, handSize); //the hand size is currently 4
-            dealCards(privateSpaceOfPlayer1, handSize);
-            dealCards(privateSpaceOfPlayer2, handSize);
-            dealCards(privateSpaceOfPlayer3, handSize);
+            dealCards(privateSpaceOfPlayer0, handSize,deck); //the hand size is currently 4
+            dealCards(privateSpaceOfPlayer1, handSize,deck);
+            dealCards(privateSpaceOfPlayer2, handSize,deck);
+            dealCards(privateSpaceOfPlayer3, handSize,deck);
+          //  List<Object[]> lostCards = new ArrayList<>(); //laver nyt object 2 sec
+             
             //dealCards(privateSpaceOfPlayer4, handSize);
             //dealCards(privateSpaceOfPlayer5, handSize);
             while(true){
@@ -113,6 +116,7 @@ public class Dealer implements Runnable {
                     break;
                 }
                 //type of table
+                ArrayList<Card> newDeck = gainCards(tableSpace, deck);
                 int tableInt = random.nextInt(1,5);
                 switch (tableInt){
                     case 1:
@@ -209,11 +213,15 @@ public class Dealer implements Runnable {
                             //anounce turn result to all players
                             System.out.println("the player should make a move");
                             gameSpace.get(new ActualField("playerMove"), new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]), new FormalField(String.class), new FormalField(String.class));
+                            
                             //if player dies the
                             previousPrivatePlayerSpace = currentPrivatePlayerSpace;
                             turnCounter++;
                         }
                     } while (!playerMove[2].equals("punch"));
+                    
+
+                    
                 }
                 tableSpace.get(new ActualField("tableType"), new FormalField(String.class));
             }
@@ -296,7 +304,31 @@ public class Dealer implements Runnable {
             playerSpace.put("turnType", false);
             playerMove = playerSpace.get(new ActualField("thisIsMyAction"), new FormalField(String.class), new FormalField(String.class));
             System.out.println((String)playerMove[1]);
+           // System.out.println("THIS IS A TEST TEST TEST");
+            System.out.println((String) playerMove[2]);
             if(playerMove[2].equals("punch")){
+                Card newcards = new Card(null);
+                ArrayList<Card> newDeck = newcards.deck();
+                System.out.println("Are we there yet?????");
+                System.out.println("WHAT ABOUT NOW!!!!!!!!!!");
+                deleteHand(privateSpaceOfPlayer0);
+                deleteHand(privateSpaceOfPlayer1);
+                deleteHand(privateSpaceOfPlayer2);
+                //removeCards(privateSpaceOfPlayer3);
+                //removeCards(privateSpaceOfPlayer4);
+               //removeCards(privateSpaceOfPlayer5);
+               System.out.println("THIS IS SEEING THE NEW DECK");
+               for(Card card: newDeck){
+                System.out.println(card);
+               }
+               System.out.println("DEALING NEW CARDS");
+               dealCards(privateSpaceOfPlayer0, handSize,newDeck);
+               dealCards(privateSpaceOfPlayer1, handSize,newDeck);
+               dealCards(privateSpaceOfPlayer2, handSize,newDeck);
+//               dealCards(privateSpaceOfPlayer3, handSize);
+//               dealCards(privateSpaceOfPlayer4, handSize);
+//               dealCards(privateSpaceOfPlayer5, handSize);
+
                 if(prevPlayerMove.equals(typeOfTable)){
                     currentPrivatePlayerSpace.put("punchResult", true);
                     previousPrivatePlayerSpace.put("otherPunchResult",false);
@@ -392,7 +424,7 @@ public class Dealer implements Runnable {
     void determineTypeOfTable(){
     }
 
-    void dealCards(RemoteSpace playerCardSpace, int handSize){
+    void dealCards(RemoteSpace playerCardSpace, int handSize, ArrayList<Card> deck){
         System.out.println("Deck size before dealing: " + deck.size());
         for(Card card : deck){
             System.out.print(card);
@@ -411,15 +443,23 @@ public class Dealer implements Runnable {
         }
         }
         
-    void removeCards(RemoteSpace playerCardSpace){
+    void deleteHand(RemoteSpace playerCardSpace){
         try {
-            while(true){
-            Object[] trashBin = playerCardSpace.get(new ActualField("card"),new FormalField(Card.class));
-            }
+            List<Object[]> trashCan = playerCardSpace.getAll(new ActualField("Card"), new FormalField(Card.class));
+            
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error while returning cards: " + e.getMessage());
         }
-
+    }
+    ArrayList<Card> gainCards(SequentialSpace table, ArrayList<Card> deck){
+        List<Object[]> tuples = table.queryAll(new ActualField("discardedCard"), new FormalField(Card.class));
+        for(Object[] card : tuples){
+            Card Card = (Card) card[1];
+            deck.add(Card);
+            System.out.println("ADDED " + Card.toString());
+        }
+        return deck;
+        
     }
     
 }

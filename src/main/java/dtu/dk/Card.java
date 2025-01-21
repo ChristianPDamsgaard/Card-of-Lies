@@ -13,7 +13,7 @@ public class Card {
 
     }
 
-    public static ArrayList<Card> deck(){ //forms a deck of cards from the different cards, with each rank having 6 identical cards.
+    public  ArrayList<Card> deck(){ //forms a deck of cards from the different cards, with each rank having 6 identical cards.
         ArrayList<Card> deck = new ArrayList<>();
         for(Rank Rank:Rank.values()){
             for(int i = 0; i<6;i++){

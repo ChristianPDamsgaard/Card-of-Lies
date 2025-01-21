@@ -23,6 +23,7 @@ public class Player implements Runnable{
     private Card gameMode = new Card(Card.Rank.KING);
     private String typeOfTable;
     private Object[] otherPlayerResult;
+    private Object[] discardCard;
 
 
 
@@ -149,6 +150,7 @@ public class Player implements Runnable{
                         String action = playerInput.nextLine();
 
                         while (true) {
+                            
                             if (action.equals("c")) {
                                 int cardChoice = selectCard(hand, cards, playerInput);
                                 while (true) {
@@ -161,12 +163,20 @@ public class Player implements Runnable{
                                 }
                                 mySpace.put("thisIsMyAction", hand.get(cardChoice).toString(), "cards");
                                 hand.remove(cardChoice);
-                                Object[] removedTuple = mySpace.get(new ActualField("Card"), new ActualField(cards.get(cardChoice)[1]));
+                                mySpace.put(new ActualField("discardedCard"), new ActualField(cards.get(cardChoice)[1])); //put used cards into a discard pile
+                                table.put(new ActualField("discardedCard"), new ActualField(cards.get(cardChoice)[1]));
+                                   
                                 System.out.println("you have now played your turn");
 
                                 break;
                             } else if (action.equals("p")) {
+                                try {
                                 //if discerning lies
+                                
+                                } catch (Exception e) {
+                                    // TODO: handle exception
+                                }
+                             
                                 mySpace.put("thisIsMyAction", "callOut", "punch");
 
                                 Object[] actionResult = mySpace.get(new ActualField("punchResult"), new FormalField(Boolean.class));
@@ -202,10 +212,12 @@ public class Player implements Runnable{
                             } else {
                                 //person død
                                 mySpace.get(new ActualField("youDied"), new ActualField(playerName), new ActualField(playerId), new ActualField(false));
+                                
                                 mySpace.put("youDied", playerName, playerId, true);
                                 mySpace.put("DeathcountUp");
                                 playerDead = true;
-                                System.out.println("you have died, waiting game to end"); //Carsten giv en besked til en taber
+                                System.out.println("you have died, waiting game to end");
+                                
                             }
                         }
 
