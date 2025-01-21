@@ -92,6 +92,11 @@ public class Dealer implements Runnable {
                 if(peopleAlive == 1){
                     while(true)
                     {
+                        deathCount = currentPrivatePlayerSpace.getp(new ActualField("DeathcountUp"));
+                        if(deathCount != null){
+                            peopleAlive --;
+                            System.out.println(peopleAlive);
+                        }
                         whichPlayerTurn((turnCounter%seats));
                         deathPlaceHolder = currentPrivatePlayerSpace.query(new ActualField("youDied"),new ActualField(currentPlayer[2]),new ActualField(currentPlayer[0]), new FormalField(Boolean.class));
                         if(deathPlaceHolder[3].equals(true)){ //mangler condition

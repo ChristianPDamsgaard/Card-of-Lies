@@ -205,7 +205,7 @@ public class Player implements Runnable{
                                 mySpace.put("youDied", playerName, playerId, true);
                                 mySpace.put("DeathcountUp");
                                 playerDead = true;
-                                System.out.println("you have died, waiting game to end");
+                                System.out.println("you have died, waiting game to end"); //Carsten giv en besked til en taber
                             }
                         }
 
