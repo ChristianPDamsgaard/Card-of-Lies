@@ -44,6 +44,7 @@ public class Player implements Runnable{
     public void run(){
         getPrivateSpace();
         try{
+            while(true){
             text.waitingForGame("waiting");
             table.query(new ActualField("gameHasStarted"));
             text.waitingForGame("found");
@@ -51,7 +52,6 @@ public class Player implements Runnable{
             //welcome to game text
             Scanner playerInput = new Scanner(System.in);
             mySpace.put("youDied",playerName,playerId,false);
-            while(true){
                 while(true) {
                     //might need lock
                     //check for turn
@@ -249,7 +249,9 @@ public class Player implements Runnable{
                     String endMessage = playerInput.nextLine().toLowerCase();
                     System.out.println("NickErSuperSej");
                     if (endMessage.equals("a")) { //a for again
-                        table.put("playAgain", playerName, playerId, url);
+                        table.put("playAgain",playerId, playerName, url);
+                        mySpace.put("youDied",playerName,playerId,false);
+                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                         break;
                     } else if (endMessage.equals("e")) { //e for end
                         endGame = true;

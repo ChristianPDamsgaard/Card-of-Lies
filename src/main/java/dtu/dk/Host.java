@@ -8,10 +8,12 @@ import org.jspace.SequentialSpace;
 import java.util.Scanner;
 
 public class Host implements  Runnable{
-    private RemoteSpace userInputSpace;
+    RemoteSpace userInputSpace;
     private String id;
     private TextClassForAllText text = new TextClassForAllText();
     Scanner userInput = new Scanner(System.in);
+    RemoteSpace spaceTables;
+
 
     private String ip;
     private String postalCode;
@@ -26,8 +28,8 @@ public class Host implements  Runnable{
         //starting new thread for the dealer
         Scanner userInput = new Scanner(System.in);
         try {
-            RemoteSpace userInputSpace = new RemoteSpace("tcp://" + ip+":"+ postalCode +"/userInput?keep");
-            RemoteSpace spaceTables = new RemoteSpace("tcp://" + ip+":"+ postalCode +"/table?keep");
+            userInputSpace = new RemoteSpace("tcp://" + ip+":"+ postalCode +"/userInput?keep");
+            spaceTables = new RemoteSpace("tcp://" + ip+":"+ postalCode +"/table?keep");
             new Thread(new Lobby(ip, postalCode)).start();
             userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
             while (true) {
@@ -40,13 +42,23 @@ public class Host implements  Runnable{
                     userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
                 }
             }if (id.equals("host")) {
+                hostChoice();
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+    void hostChoice(){
+        try{
+            while (true){
                 do {
                     text.hostInstructions();
                     userInputSpace.put("hostChoice", userInput.nextLine());
                 } while (spaceTables.queryp(new ActualField("gameHasStarted")) == null);
+               spaceTables.get(new ActualField("restart"));
             }
         }catch (Exception e){
-            System.out.println(e.getMessage());
+
         }
     }
 }

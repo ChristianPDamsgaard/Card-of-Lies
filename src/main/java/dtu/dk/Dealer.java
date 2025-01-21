@@ -27,12 +27,14 @@ public class Dealer implements Runnable {
     ArrayList<Card> deck = cards.deck();
     private boolean gameState;
 
+    TextClassForAllText text = new TextClassForAllText();
 
     private String typeOfTable;
     private String prevPlayerMove;
     int amountOfPlayers;
     private int peopleAlive;
     int handSize = 4;
+    int turnCounter;
 
     RemoteSpace currentPrivatePlayerSpace;
     RemoteSpace previousPrivatePlayerSpace;
@@ -52,10 +54,10 @@ public class Dealer implements Runnable {
     }
     public void run(){
         try {
-
             while(true) {
-            Object[] hostResponse = userInputSpace.get(new ActualField("hostChoice"), new FormalField(String.class));
-            String choice = (String) hostResponse[1];
+
+                Object[] hostResponse = userInputSpace.get(new ActualField("hostChoice"), new FormalField(String.class));
+                String choice = (String) hostResponse[1];
                 switch (choice) {
                     case "s": //start game
                         amountOfPlayers = (guestlistSpace.size());
@@ -76,11 +78,10 @@ public class Dealer implements Runnable {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
     }
     private void gameStart(int seats){
         gameState = true;
-        int turnCounter = 0;
+        turnCounter = 0;
         try {
             tableSpace.put("gameHasStarted");
             generatePrivateSpaces(seats);
@@ -88,8 +89,8 @@ public class Dealer implements Runnable {
             System.out.println("Game mode is set to default!");
             dealCards(privateSpaceOfPlayer0, handSize,deck); //the hand size is currently 4
             dealCards(privateSpaceOfPlayer1, handSize,deck);
-            dealCards(privateSpaceOfPlayer2, handSize,deck);
-            dealCards(privateSpaceOfPlayer3, handSize,deck);
+            //dealCards(privateSpaceOfPlayer2, handSize,deck);
+            //dealCards(privateSpaceOfPlayer3, handSize,deck);
 
             //dealCards(privateSpaceOfPlayer4, handSize);
             //dealCards(privateSpaceOfPlayer5, handSize);
@@ -97,6 +98,8 @@ public class Dealer implements Runnable {
                 prevPlayerMove = "";
                 System.out.println(peopleAlive);
                 if(peopleAlive == 1){
+                    previousPrivatePlayerSpace.put("doAction",(String)prevPlayer[0], false);
+                    currentPrivatePlayerSpace.put("doAction",(String)currentPlayer[0], false);
                     while(true)
                     { 
                     deathCount = currentPrivatePlayerSpace.getp(new ActualField("DeathcountUp"));
@@ -114,8 +117,8 @@ public class Dealer implements Runnable {
                             gameState = false;
                             previousPrivatePlayerSpace.put("doAction",prevPlayer[0], false);
                             previousPrivatePlayerSpace.put("otherPunchResult",false);
-                            guestlistSpace.getAll();
                             System.out.println("GAME HAS ENDED"); //casten
+                            tableSpace.get(new ActualField("gameHasStarted"));
                             tableSpace.put("gameHasEnded");
                             break;
                         }
@@ -150,9 +153,8 @@ public class Dealer implements Runnable {
                 whichPlayerTurn(turnCounter % seats);
                 System.out.println((String) currentPlayer[2] + " " + (String) currentPlayer[0]);
                 System.out.println((String) currentPlayer[3]);
-
                 deathPlaceHolder = currentPrivatePlayerSpace.query(new ActualField("youDied"),new ActualField(currentPlayer[2]),new ActualField(currentPlayer[0]), new FormalField(Boolean.class));
-
+                System.out.println(deathPlaceHolder[3]);
                 if(deathPlaceHolder[3].equals(true)){ //mangler condition
                     turnCounter++;
                 }else {
@@ -167,6 +169,8 @@ public class Dealer implements Runnable {
                     do {
                         System.out.println(peopleAlive);
                         if(peopleAlive == 1){
+                            previousPrivatePlayerSpace.put("doAction",(String)prevPlayer[0], false);
+                            currentPrivatePlayerSpace.put("doAction",(String)currentPlayer[0], false);
                             while(true)
                             {
                                 whichPlayerTurn((turnCounter%seats));
@@ -178,7 +182,10 @@ public class Dealer implements Runnable {
                                     //something about a player has won
                                     guestlistSpace.getAll();
                                     gameState = false;
+                                    previousPrivatePlayerSpace.put("doAction",prevPlayer[0], false);
+                                    previousPrivatePlayerSpace.put("otherPunchResult",false);
                                     System.out.println("GAME HAS ENDED"); //casten
+                                    tableSpace.get(new ActualField("gameHasStarted"));
                                     tableSpace.put("gameHasEnded");
                                     break;
                                 }
@@ -202,9 +209,6 @@ public class Dealer implements Runnable {
                         if(prevAction != null){
                             prevPlayerMove = (String)prevAction[1];
                         }
-
-
-
                         //who has next turn
                         whichPlayerTurn((turnCounter%seats));
                         deathPlaceHolder = currentPrivatePlayerSpace.query(new ActualField("youDied"),new ActualField(currentPlayer[2]),new ActualField(currentPlayer[0]), new FormalField(Boolean.class));
@@ -235,13 +239,13 @@ public class Dealer implements Runnable {
                             turnCounter++;
                         }
                     } while (!playerMove[2].equals("punch"));
-                    
-
-                    
                 }
                 tableSpace.get(new ActualField("tableType"), new FormalField(String.class));
             }
-
+            System.out.println("RUBBERDUCK");
+            tableSpace.put("restart");
+            guestlistSpace.getAll(new FormalField(String.class), new FormalField(Integer.class), new FormalField(String.class),new FormalField(String.class), new ActualField("guest"));
+            System.out.println(guestlistSpace.size());
         } catch (Exception e) {
             // TODO: handle exception
         }

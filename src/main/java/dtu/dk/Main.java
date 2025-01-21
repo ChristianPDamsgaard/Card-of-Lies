@@ -52,6 +52,7 @@ public class Main {
                 if(addPlay != null){
                     addPlayer();
                 }else if(playagain != null){
+
                         int seat = guestRegistry.size();
                         guestRegistry.put(playagain[1], seat, playagain[2], playagain[3], "guest");
                 }
