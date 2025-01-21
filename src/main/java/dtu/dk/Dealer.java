@@ -95,14 +95,12 @@ public class Dealer implements Runnable {
                         whichPlayerTurn((turnCounter%seats));
                         deathPlaceHolder = currentPrivatePlayerSpace.query(new ActualField("youDied"),new ActualField(currentPlayer[2]),new ActualField(currentPlayer[0]), new FormalField(Boolean.class));
                         if(deathPlaceHolder[3].equals(true)){ //mangler condition
-                            System.out.println("POISONDUCK");
                             turnCounter++;
                         }else {
                             //announce win
                             //something about a player has won
                             guestlistSpace.getAll();
-                            System.out.println("RUBBERDUCKERS");
-                            System.out.println("GAME HAS ENDED");
+                            System.out.println("GAME HAS ENDED"); //casten
                             tableSpace.put("gameHasEnded");
                             break;
                         }
@@ -169,29 +167,22 @@ public class Dealer implements Runnable {
                         whichPlayerTurn((turnCounter%seats));
                         deathPlaceHolder = currentPrivatePlayerSpace.query(new ActualField("youDied"),new ActualField(currentPlayer[2]),new ActualField(currentPlayer[0]), new FormalField(Boolean.class));
                         System.out.println("" + deathPlaceHolder[2] + deathPlaceHolder[3]);
-                        System.out.println("jeg er en haffelaff");
 
                         if(deathPlaceHolder[3].equals(true)){
-                            System.out.println("jeg er en alf");
                             turnCounter++;
                         }else {
                             //currentPrivatePlayerSpace.query(new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]), new ActualField(currentPlayer[2]), new ActualField(currentPlayer[3]),new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]),);
                             //currentPrivatePlayerSpace.ActualField("dead");
-                            System.out.println("jeg er en troldmand fra oz");
                             System.out.println((String) currentPlayer[2] + " " + (String) currentPlayer[0]);
                             System.out.println((String) currentPlayer[3]);
                             sendTurn(currentPrivatePlayerSpace);
                             TimeUnit.MILLISECONDS.sleep(50);
                             //guestlistSpace.get(new FormalField(String.class), new ActualField(turnCounter%seats), new FormalField(String.class));
                             deathCount = currentPrivatePlayerSpace.getp(new ActualField("DeathcountUp"));
-                            System.out.println("WHYDUCK");
                             if(deathCount != null){
-                                System.out.println("CATTYDUCK");
                                 peopleAlive --;
                                 System.out.println(peopleAlive);
                             }
-                            System.out.println("COMEDUCK");
-                            System.out.println("THISDUCKY");
                             //anounce turn result to all players
                             System.out.println("the player should make a move");
                             gameSpace.get(new ActualField("playerMove"), new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]), new FormalField(String.class), new FormalField(String.class));
@@ -277,16 +268,12 @@ public class Dealer implements Runnable {
             System.out.println("Your turn sent to: " + currentPlayer[0]);
     
             // Wait for acknowledgment with timeout
-            System.out.println("it is their turn");
             playerSpace.get(new ActualField("canIAction"), new ActualField((String)currentPlayer[0]));
-            System.out.println("can they actuib");
             playerSpace.put("doAction", (String)currentPlayer[0]);
             playerSpace.put("turnType", false);
-            System.out.println("LOBBYDUCK");
             playerMove = playerSpace.get(new ActualField("thisIsMyAction"), new FormalField(String.class), new FormalField(String.class));
             System.out.println((String)playerMove[1]);
             if(playerMove[2].equals("punch")){
-                System.out.println("MOTHERDUCKER");
                 if(prevPlayerMove.equals(typeOfTable)){
                     currentPrivatePlayerSpace.put("punchResult", true);
                     previousPrivatePlayerSpace.put("otherPunchResult",false);
@@ -298,7 +285,6 @@ public class Dealer implements Runnable {
             }else{
                 previousPrivatePlayerSpace.put("otherPunchResult",false);
             }
-            System.out.println("FUNNYDUCK");
             System.out.println("Player action: " + playerMove[1] + ", " + playerMove[2]);
             // Report the action to the game space
             gameSpace.put("playerMove", currentPlayer[0], currentPlayer[1], playerMove[1], playerMove[2]);

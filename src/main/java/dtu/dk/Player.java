@@ -56,7 +56,6 @@ public class Player implements Runnable{
 
                     mySpace.put("canIAction", playerId);
                     mySpace.get(new ActualField("doAction"), new ActualField(playerId));
-                    System.out.println("BAZARDUCK");
                     Object[] whichType = table.query(new ActualField("tableType"), new FormalField(String.class));
                     typeOfTable = (String) whichType[1];
 
@@ -106,11 +105,9 @@ public class Player implements Runnable{
                         System.out.println("you have now played your turn");
                         // Remove a specific tuple with a pattern
                         Object[] removedTuple = mySpace.get(new ActualField("Card"), new ActualField(cards.get(cardChoice)[1]));
-                        System.out.println("NODUCK");
                         System.out.println("MISSINGDUCk");
                         otherPlayerResult = mySpace.get(new ActualField("otherPunchResult"), new FormalField(Boolean.class));
                         if((Boolean)otherPlayerResult[1]){
-                            System.out.println("BETTERDUCK");
                             if (!roulette(gunChamper)) {
                                 gunChamper--; //tjekke om der bliver skudt om det er dig selv eller modstander
                                 //mySpace.put("youSurvived",playerName,playerId,false);
@@ -171,11 +168,9 @@ public class Player implements Runnable{
                                 break;
                             } else if (action.equals("p")) {
                                 //if discerning lies
-                                System.out.println("HATEDUCK");
                                 mySpace.put("thisIsMyAction", "callOut", "punch");
 
                                 Object[] actionResult = mySpace.get(new ActualField("punchResult"), new FormalField(Boolean.class));
-                                System.out.println("WHATTHEDUCK");
                                 if((Boolean) actionResult[1]){
                                     if (!roulette(gunChamper)) {
                                         gunChamper--; //tjekke om der bliver skudt om det er dig selv eller modstander
@@ -200,10 +195,8 @@ public class Player implements Runnable{
                             System.out.println("that was not an option, try again");
                             action = playerInput.nextLine();
                         }
-                        System.out.println("MISSINGDUCk");
                         otherPlayerResult = mySpace.get(new ActualField("otherPunchResult"), new FormalField(Boolean.class));
                         if((Boolean)otherPlayerResult[1]){
-                            System.out.println("BETTERDUCK");
                             if (!roulette(gunChamper)) {
                                 gunChamper--; //tjekke om der bliver skudt om det er dig selv eller modstander
                                 //mySpace.put("youSurvived",playerName,playerId,false);
