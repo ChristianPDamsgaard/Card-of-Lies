@@ -17,6 +17,7 @@ public class Dealer implements Runnable {
     private SequentialSpace userInputSpace;
     private SequentialSpace guestlistSpace;
     private SequentialSpace gameSpace = new SequentialSpace();
+    private Object[] prevPlayer;
     private Object[] currentPlayer;
     private Object[] playerMove;
     private Object[] deathPlaceHolder;
@@ -24,6 +25,8 @@ public class Dealer implements Runnable {
     private Object[] prevAction;
     private Card cards = new Card(null);
     ArrayList<Card> deck = cards.deck();
+    private boolean gameState;
+
 
     private String typeOfTable;
     private String prevPlayerMove;
@@ -76,6 +79,7 @@ public class Dealer implements Runnable {
 
     }
     private void gameStart(int seats){
+        gameState = true;
         int turnCounter = 0;
         try {
             tableSpace.put("gameHasStarted");
@@ -107,6 +111,9 @@ public class Dealer implements Runnable {
                         }else {
                             //announce win
                             //something about a player has won
+                            gameState = false;
+                            previousPrivatePlayerSpace.put("doAction",prevPlayer[0], false);
+                            previousPrivatePlayerSpace.put("otherPunchResult",false);
                             guestlistSpace.getAll();
                             System.out.println("GAME HAS ENDED"); //casten
                             tableSpace.put("gameHasEnded");
@@ -155,6 +162,7 @@ public class Dealer implements Runnable {
                     //reports to a space, (playerMove, the id of player, the seat of player, what player did, if player punch or cards)
                     gameSpace.get(new ActualField("playerMove"), new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]), new FormalField(String.class), new FormalField(String.class));
                     previousPrivatePlayerSpace = currentPrivatePlayerSpace;
+                    prevPlayer = currentPlayer;
                     turnCounter++;
                     do {
                         System.out.println(peopleAlive);
@@ -169,6 +177,7 @@ public class Dealer implements Runnable {
                                     //announce win
                                     //something about a player has won
                                     guestlistSpace.getAll();
+                                    gameState = false;
                                     System.out.println("GAME HAS ENDED"); //casten
                                     tableSpace.put("gameHasEnded");
                                     break;
@@ -222,6 +231,7 @@ public class Dealer implements Runnable {
                             
                             //if player dies the
                             previousPrivatePlayerSpace = currentPrivatePlayerSpace;
+                            prevPlayer = currentPlayer;
                             turnCounter++;
                         }
                     } while (!playerMove[2].equals("punch"));
@@ -306,7 +316,7 @@ public class Dealer implements Runnable {
     
             // Wait for acknowledgment with timeout
             playerSpace.get(new ActualField("canIAction"), new ActualField((String)currentPlayer[0]));
-            playerSpace.put("doAction", (String)currentPlayer[0]);
+            playerSpace.put("doAction", (String)currentPlayer[0], true);
             playerSpace.put("turnType", false);
             playerMove = playerSpace.get(new ActualField("thisIsMyAction"), new FormalField(String.class), new FormalField(String.class));
             System.out.println((String)playerMove[1]);
@@ -363,7 +373,7 @@ public class Dealer implements Runnable {
         try{
             playerSpace.put("youAreFirstTurner", typeOfTable);
             playerSpace.get(new ActualField("canIAction"), new ActualField((String)currentPlayer[0]));
-            playerSpace.put("doAction", (String)currentPlayer[0]);
+            playerSpace.put("doAction", (String)currentPlayer[0], true);
             playerSpace.put("turnType", true);
             playerMove =  playerSpace.get(new ActualField("thisIsMyAction"), new FormalField(String.class), new FormalField(String.class));
             //reports to a space, (playerMove, the id of player, the seat of player, what player did, if player punch or cards)

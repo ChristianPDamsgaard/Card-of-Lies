@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class Player implements Runnable{
     private String playerName;
@@ -24,6 +25,8 @@ public class Player implements Runnable{
     private String typeOfTable;
     private Object[] otherPlayerResult;
     private Object[] discardCard;
+    private boolean gameState;
+    private String action;
 
 
 
@@ -55,7 +58,10 @@ public class Player implements Runnable{
                     System.out.println("your turn received");
 
                     mySpace.put("canIAction", playerId);
-                    mySpace.get(new ActualField("doAction"), new ActualField(playerId));
+                    Object[] actionOne = mySpace.get(new ActualField("doAction"), new ActualField(playerId), new FormalField(Boolean.class));
+                    if(!(Boolean)actionOne[2]){
+                        break;
+                    }
                     Object[] whichType = table.query(new ActualField("tableType"), new FormalField(String.class));
                     typeOfTable = (String) whichType[1];
 
@@ -147,7 +153,7 @@ public class Player implements Runnable{
                         System.out.println("it is the " + typeOfTable + "'s table");   //Carsten skal lave noget text
                         System.out.println("");   //Carsten skal lave noget text omkring hvad man skal gøre udfra den info ovenover
                         System.out.println("write an action either c or p");
-                        String action = playerInput.nextLine();
+                        action = playerInput.nextLine();
 
                         while (true) {
                             
@@ -203,7 +209,9 @@ public class Player implements Runnable{
                             System.out.println("that was not an option, try again");
                             action = playerInput.nextLine();
                         }
+                        System.out.println("EnMandIDameTøj");
                         otherPlayerResult = mySpace.get(new ActualField("otherPunchResult"), new FormalField(Boolean.class));
+                        System.out.println("FilipErSåFolt");
                         if((Boolean)otherPlayerResult[1]){
                             if (!roulette(gunChamper)) {
                                 gunChamper--; //tjekke om der bliver skudt om det er dig selv eller modstander
@@ -221,18 +229,25 @@ public class Player implements Runnable{
                             }
                         }
 
-
-                        if (playerDead) {
-                            break;
-                        }
+                    }
+                    Object[] endChekker = table.queryp(new ActualField("gameHasEnded"));
+                    TimeUnit.MILLISECONDS.sleep(25);
+                    if(endChekker != null){
+                        break;
+                    }
+                    if (playerDead) {
+                        break;
                     }
                 }
-                mySpace.get(new ActualField("gameHasEnded"));
+                System.out.println("PeterErEnKæmpeTaber");
                 //play again or quit.... maybe return to lobby
                 // Carsten skal lave systemprint til spillet er slut
 
-                String endMessage = playerInput.nextLine().toLowerCase();
+                table.query(new ActualField("gameHasEnded"));
                 while(true) {
+                    System.out.println("press a or e");
+                    String endMessage = playerInput.nextLine().toLowerCase();
+                    System.out.println("NickErSuperSej");
                     if (endMessage.equals("a")) { //a for again
                         table.put("playAgain", playerName, playerId, url);
                         break;
