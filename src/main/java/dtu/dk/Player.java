@@ -35,7 +35,6 @@ public class Player implements Runnable{
         this.gunChamper = 6;
         this.ip = ip;
         this.postalCode = postalCode;
-
     }
 
     public void run(){

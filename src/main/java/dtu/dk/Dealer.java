@@ -143,6 +143,24 @@ public class Dealer implements Runnable {
                     turnCounter++;
                     do {
                         System.out.println(peopleAlive);
+                        if(peopleAlive == 1){
+                            while(true)
+                            {
+                                whichPlayerTurn((turnCounter%seats));
+                                deathPlaceHolder = currentPrivatePlayerSpace.query(new ActualField("youDied"),new ActualField(currentPlayer[2]),new ActualField(currentPlayer[0]), new FormalField(Boolean.class));
+                                if(deathPlaceHolder[3].equals(true)){ //mangler condition
+                                    turnCounter++;
+                                }else {
+                                    //announce win
+                                    //something about a player has won
+                                    guestlistSpace.getAll();
+                                    System.out.println("GAME HAS ENDED"); //casten
+                                    tableSpace.put("gameHasEnded");
+                                    break;
+                                }
+                            }
+                            break;
+                        }
                         /*
                          * DEALER MUST DEAL CARDS TO PLAYERS
                          * ANNOUNCE WHAT IS PLAYED
