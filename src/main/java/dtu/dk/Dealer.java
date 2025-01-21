@@ -82,18 +82,10 @@ public class Dealer implements Runnable {
             generatePrivateSpaces(seats);
             System.out.println("Game starts!");
             System.out.println("Game mode is set to default!");
-<<<<<<< Updated upstream
             dealCards(privateSpaceOfPlayer0, handSize,deck); //the hand size is currently 4
             dealCards(privateSpaceOfPlayer1, handSize,deck);
             dealCards(privateSpaceOfPlayer2, handSize,deck);
             dealCards(privateSpaceOfPlayer3, handSize,deck);
-=======
-            dealCards(privateSpaceOfPlayer0, handSize); //the hand size is currently 4
-            dealCards(privateSpaceOfPlayer1, handSize);
-            dealCards(privateSpaceOfPlayer2, handSize);
-            dealCards(privateSpaceOfPlayer3, handSize);
-            List<Object[]> lostCards = new ArrayList<>(); //laver nyt object 2 sec
->>>>>>> Stashed changes
 
             //dealCards(privateSpaceOfPlayer4, handSize);
             //dealCards(privateSpaceOfPlayer5, handSize);
@@ -465,19 +457,7 @@ public class Dealer implements Runnable {
             System.out.println("Error while returning cards: " + e.getMessage());
         }
     }
-<<<<<<< Updated upstream
 
 
-=======
-    ArrayList<Card> gainCards(SequentialSpace table, ArrayList<Card> deck){
-        List<Object[]> tuples = table.queryAll(new ActualField("discardedCard"), new FormalField(Card.class));
-        for(Object[] card : tuples){
-            Card Card = (Card) card[1];
-            deck.add(Card);
-        }
-        return deck;
-        
-    }
->>>>>>> Stashed changes
     
 }
