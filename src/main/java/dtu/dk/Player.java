@@ -115,6 +115,7 @@ public class Player implements Runnable{
                                 //person død
                                 mySpace.get(new ActualField("youDied"), new ActualField(playerName), new ActualField(playerId), new ActualField(false));
                                 mySpace.put("youDied", playerName, playerId, true);
+                                mySpace.put("DeathcountUp");
                                 table.put("DeathcountUp");
                                 playerDead = true;
                                 System.out.println("you have died, waiting game to end");
@@ -139,7 +140,6 @@ public class Player implements Runnable{
                                 komma = "";
                             }
                             Card card = (Card) tuple[1]; //find the card part of the tuple
-
                             System.out.print(handCounter + ")" + " " + card.toString() + komma + " ");
                             // & print it
                         }
@@ -163,7 +163,7 @@ public class Player implements Runnable{
                                 }
                                 mySpace.put("thisIsMyAction", hand.get(cardChoice).toString(), "cards");
                                 hand.remove(cardChoice);
-                                mySpace.put(new ActualField("discardedCard"), new ActualField(cards.get(cardChoice)[1])); //put used cards into a discard pile
+                                Object[] removedTuple = mySpace.get(new ActualField("Card"), new ActualField(cards.get(cardChoice)[1]));
                                 table.put(new ActualField("discardedCard"), new ActualField(cards.get(cardChoice)[1]));
                                    
                                 System.out.println("you have now played your turn");
@@ -188,6 +188,7 @@ public class Player implements Runnable{
                                         //person død
                                         mySpace.get(new ActualField("youDied"), new ActualField(playerName), new ActualField(playerId), new ActualField(false));
                                         mySpace.put("youDied", playerName, playerId, true);
+                                        mySpace.put("DeathcountUp");
                                         table.put("DeathcountUp");
                                         playerDead = true;
                                         System.out.println("you have died, waiting game to end");
@@ -212,6 +213,7 @@ public class Player implements Runnable{
                                 mySpace.get(new ActualField("youDied"), new ActualField(playerName), new ActualField(playerId), new ActualField(false));
                                 
                                 mySpace.put("youDied", playerName, playerId, true);
+                                mySpace.put("DeathcountUp");
                                 table.put("DeathcountUp");
                                 playerDead = true;
                                 System.out.println("you have died, waiting game to end");
@@ -328,12 +330,10 @@ made for testing purposes
         }
     }
         private int selectCard(List<Card> hand, List<Object[]> cards, Scanner playerInput) {
-        int handCounter = 0; // Initialize counter for hand array
         for (Object[] tuple : cards) {
             Card card = (Card) tuple[1]; // Extract the Card object from the tuple
            // System.out.print((handCounter + 1) + ")" + " " + card.toString() + ", "); // Display the card (1-based index)
             hand.add(card); // Add the card to the hand array
-            handCounter++; // Increment the hand counter
         }
         System.out.println("\nPlay a card"); // Prompt for card selection
         return playerInput.nextInt() - 1; // Return 0-based index (subtract 1 for array indexing)
