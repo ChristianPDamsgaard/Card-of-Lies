@@ -1,6 +1,7 @@
 package dtu.dk;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.List;
@@ -85,8 +86,7 @@ public class Dealer implements Runnable {
             dealCards(privateSpaceOfPlayer1, handSize,deck);
             dealCards(privateSpaceOfPlayer2, handSize,deck);
             dealCards(privateSpaceOfPlayer3, handSize,deck);
-          //  List<Object[]> lostCards = new ArrayList<>(); //laver nyt object 2 sec
-             
+
             //dealCards(privateSpaceOfPlayer4, handSize);
             //dealCards(privateSpaceOfPlayer5, handSize);
             while(true){
@@ -116,7 +116,7 @@ public class Dealer implements Runnable {
                     break;
                 }
                 //type of table
-                ArrayList<Card> newDeck = gainCards(tableSpace, deck);
+               // ArrayList<Card> newDeck = gainCards(tableSpace, deck);
                 int tableInt = random.nextInt(1,5);
                 switch (tableInt){
                     case 1:
@@ -457,15 +457,7 @@ public class Dealer implements Runnable {
             System.out.println("Error while returning cards: " + e.getMessage());
         }
     }
-    ArrayList<Card> gainCards(SequentialSpace table, ArrayList<Card> deck){
-        List<Object[]> tuples = table.queryAll(new ActualField("discardedCard"), new FormalField(Card.class));
-        for(Object[] card : tuples){
-            Card Card = (Card) card[1];
-            deck.add(Card);
-            System.out.println("ADDED " + Card.toString());
-        }
-        return deck;
-        
-    }
+
+
     
 }
