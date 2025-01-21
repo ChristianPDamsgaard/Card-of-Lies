@@ -94,12 +94,12 @@ public class Dealer implements Runnable {
                 System.out.println(peopleAlive);
                 if(peopleAlive == 1){
                     while(true)
-                    {
-                        deathCount = currentPrivatePlayerSpace.getp(new ActualField("DeathcountUp"));
-                        if(deathCount != null){
-                            peopleAlive --;
-                            System.out.println(peopleAlive);
-                        }
+                    { 
+                    deathCount = currentPrivatePlayerSpace.getp(new ActualField("DeathcountUp"));
+                    if(deathCount != null){
+                        peopleAlive --;
+                        System.out.println(peopleAlive);
+                    }
                         whichPlayerTurn((turnCounter%seats));
                         deathPlaceHolder = currentPrivatePlayerSpace.query(new ActualField("youDied"),new ActualField(currentPlayer[2]),new ActualField(currentPlayer[0]), new FormalField(Boolean.class));
                         if(deathPlaceHolder[3].equals(true)){ //mangler condition
@@ -133,6 +133,12 @@ public class Dealer implements Runnable {
                         break;
                 }
                 tableSpace.put("tableType", typeOfTable);
+                deathCount = tableSpace.getp(new ActualField("DeathcountUp"));
+                if(deathCount != null){
+                    peopleAlive --;
+                    System.out.println(peopleAlive);
+                }
+
                 //deal cards
                 whichPlayerTurn(turnCounter % seats);
                 System.out.println((String) currentPlayer[2] + " " + (String) currentPlayer[0]);

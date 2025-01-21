@@ -115,7 +115,7 @@ public class Player implements Runnable{
                                 //person død
                                 mySpace.get(new ActualField("youDied"), new ActualField(playerName), new ActualField(playerId), new ActualField(false));
                                 mySpace.put("youDied", playerName, playerId, true);
-                                mySpace.put("DeathcountUp");
+                                table.put("DeathcountUp");
                                 playerDead = true;
                                 System.out.println("you have died, waiting game to end");
                             }
@@ -188,7 +188,7 @@ public class Player implements Runnable{
                                         //person død
                                         mySpace.get(new ActualField("youDied"), new ActualField(playerName), new ActualField(playerId), new ActualField(false));
                                         mySpace.put("youDied", playerName, playerId, true);
-                                        mySpace.put("DeathcountUp");
+                                        table.put("DeathcountUp");
                                         playerDead = true;
                                         System.out.println("you have died, waiting game to end");
                                     }
@@ -197,8 +197,6 @@ public class Player implements Runnable{
                                 }
 
                                 System.out.println("you have now played your turn");
-                                
-
                                 break;
                             }
                             System.out.println("that was not an option, try again");
@@ -214,7 +212,7 @@ public class Player implements Runnable{
                                 mySpace.get(new ActualField("youDied"), new ActualField(playerName), new ActualField(playerId), new ActualField(false));
                                 
                                 mySpace.put("youDied", playerName, playerId, true);
-                                mySpace.put("DeathcountUp");
+                                table.put("DeathcountUp");
                                 playerDead = true;
                                 System.out.println("you have died, waiting game to end");
                                 
