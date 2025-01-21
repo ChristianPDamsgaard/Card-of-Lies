@@ -92,11 +92,6 @@ public class Dealer implements Runnable {
                 if(peopleAlive == 1){
                     while(true)
                     {
-                        deathCount = currentPrivatePlayerSpace.getp(new ActualField("DeathcountUp"));
-                        if(deathCount != null){
-                            peopleAlive --;
-                            System.out.println(peopleAlive);
-                        }
                         whichPlayerTurn((turnCounter%seats));
                         deathPlaceHolder = currentPrivatePlayerSpace.query(new ActualField("youDied"),new ActualField(currentPlayer[2]),new ActualField(currentPlayer[0]), new FormalField(Boolean.class));
                         if(deathPlaceHolder[3].equals(true)){ //mangler condition
@@ -129,6 +124,11 @@ public class Dealer implements Runnable {
                         break;
                 }
                 tableSpace.put("tableType", typeOfTable);
+                deathCount = tableSpace.getp(new ActualField("DeathcountUp"));
+                if(deathCount != null){
+                    peopleAlive --;
+                    System.out.println(peopleAlive);
+                }
                 //deal cards
                 whichPlayerTurn(turnCounter % seats);
                 System.out.println((String) currentPlayer[2] + " " + (String) currentPlayer[0]);
@@ -201,11 +201,6 @@ public class Dealer implements Runnable {
                             sendTurn(currentPrivatePlayerSpace);
                             TimeUnit.MILLISECONDS.sleep(50);
                             //guestlistSpace.get(new FormalField(String.class), new ActualField(turnCounter%seats), new FormalField(String.class));
-                            deathCount = currentPrivatePlayerSpace.getp(new ActualField("DeathcountUp"));
-                            if(deathCount != null){
-                                peopleAlive --;
-                                System.out.println(peopleAlive);
-                            }
                             //anounce turn result to all players
                             System.out.println("the player should make a move");
                             gameSpace.get(new ActualField("playerMove"), new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]), new FormalField(String.class), new FormalField(String.class));
