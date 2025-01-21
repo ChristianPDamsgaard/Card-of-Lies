@@ -83,7 +83,7 @@ public class Dealer implements Runnable {
             dealCards(privateSpaceOfPlayer0, handSize); //the hand size is currently 4
             dealCards(privateSpaceOfPlayer1, handSize);
             dealCards(privateSpaceOfPlayer2, handSize);
-            //dealCards(privateSpaceOfPlayer3, handSize);
+            dealCards(privateSpaceOfPlayer3, handSize);
             //dealCards(privateSpaceOfPlayer4, handSize);
             //dealCards(privateSpaceOfPlayer5, handSize);
             while(true){
@@ -110,16 +110,19 @@ public class Dealer implements Runnable {
                     break;
                 }
                 //type of table
-                int tableInt = random.nextInt(1,4);
+                int tableInt = random.nextInt(1,5);
                 switch (tableInt){
                     case 1:
-                        typeOfTable = "Kings";
+                        typeOfTable = "KING";
                         break;
                     case 2:
-                        typeOfTable = "Queens";
+                        typeOfTable = "QUEEN";
                         break;
                     case 3:
-                        typeOfTable = "Aces";
+                        typeOfTable = "ACE";
+                        break;
+                    case 4:
+                        typeOfTable = "JACK";
                         break;
                 }
                 tableSpace.put("tableType", typeOfTable);
@@ -154,7 +157,7 @@ public class Dealer implements Runnable {
                          *
                          */
                         //taking previous player turn move
-                        prevAction = currentPrivatePlayerSpace.getp(new ActualField("thisIsMyAction"), new FormalField(String.class), new FormalField(String.class));
+                        prevAction = playerMove;
                         TimeUnit.MILLISECONDS.sleep(25);
                         if(prevAction != null){
                             prevPlayerMove = (String)prevAction[1];
@@ -187,20 +190,8 @@ public class Dealer implements Runnable {
                                 peopleAlive --;
                                 System.out.println(peopleAlive);
                             }
-
-                            Object[] myMove = currentPrivatePlayerSpace.query(new ActualField("thisIsMyAction"), new FormalField(String.class), new FormalField(String.class));
-                            if(myMove[2].equals("punch")){
-                                if(prevPlayerMove.equals(typeOfTable)){
-                                    currentPrivatePlayerSpace.put("punchResult", true);
-                                    previousPrivatePlayerSpace.put("otherPunchResult",false);
-
-                                }else{
-                                    currentPrivatePlayerSpace.put("punchResult", false);
-                                    previousPrivatePlayerSpace.put("otherPunchResult",true);
-                                }
-                            }
-
-
+                            System.out.println("COMEDUCK");
+                            System.out.println("THISDUCKY");
                             //anounce turn result to all players
                             System.out.println("the player should make a move");
                             gameSpace.get(new ActualField("playerMove"), new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]), new FormalField(String.class), new FormalField(String.class));
@@ -293,6 +284,20 @@ public class Dealer implements Runnable {
             playerSpace.put("turnType", false);
             System.out.println("LOBBYDUCK");
             playerMove = playerSpace.get(new ActualField("thisIsMyAction"), new FormalField(String.class), new FormalField(String.class));
+            System.out.println((String)playerMove[1]);
+            if(playerMove[2].equals("punch")){
+                System.out.println("MOTHERDUCKER");
+                if(prevPlayerMove.equals(typeOfTable)){
+                    currentPrivatePlayerSpace.put("punchResult", true);
+                    previousPrivatePlayerSpace.put("otherPunchResult",false);
+
+                }else{
+                    currentPrivatePlayerSpace.put("punchResult", false);
+                    previousPrivatePlayerSpace.put("otherPunchResult",true);
+                }
+            }else{
+                previousPrivatePlayerSpace.put("otherPunchResult",false);
+            }
             System.out.println("FUNNYDUCK");
             System.out.println("Player action: " + playerMove[1] + ", " + playerMove[2]);
             // Report the action to the game space
@@ -317,7 +322,7 @@ public class Dealer implements Runnable {
             //reports to a space, (playerMove, the id of player, the seat of player, what player did, if player punch or cards)
             gameSpace.put("playerMove", currentPlayer[0], currentPlayer[1], playerMove[1], playerMove[2]);
             System.out.println("playerMove "+ currentPlayer[0] + " " + currentPlayer[1] + " " + playerMove[1] + " " + playerMove[2]);
-
+            previousPrivatePlayerSpace.put("otherPunchResult",false);
         }catch (Exception e){
 
         }
