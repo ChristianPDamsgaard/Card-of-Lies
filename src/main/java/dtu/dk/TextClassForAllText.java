@@ -155,7 +155,7 @@ public class TextClassForAllText {
         System.out.println();
     }
     void gameDone(){
-        String message = "Game has ended! You can now choose to either play again ('a') or end your session ('e'):";
+        String message = "Game has ended!";
         smoothText(message);
         System.out.println();
     }
