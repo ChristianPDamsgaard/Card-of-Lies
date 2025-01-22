@@ -38,7 +38,7 @@ public class Host implements  Runnable{
             String identityResponse = (String) userResponseToIdentity[1]; //take host answer and save it in a string
             while (true) {
                 try {
-                    if (identityResponse.equals("h")) { //creating host and welcome messages
+                    if (identityResponse.equals("h")) { //if typed correct welcome host
                         text.welcomeHost();
                         userInputSpace.put("personHaveId", "host");
                         break;
@@ -56,11 +56,11 @@ public class Host implements  Runnable{
             }
             while (true){
                 try{
-                    Object[] result = userInputSpace.getp(new ActualField("personHaveId"), new FormalField(String.class)); //getting the playerid from the list
+                    Object[] result = userInputSpace.getp(new ActualField("personHaveId"), new FormalField(String.class)); //finding out if host have typed h if not you cannot be host
                     if (result != null) {
                         id = (String) result[1];
                         break;
-                    }else if(userInputSpace.getp(new ActualField("personDoNotHaveId")) != null){ //player do not exist type again
+                    }else if(userInputSpace.getp(new ActualField("personDoNotHaveId")) != null){ // not the correct id
                         userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
                     }
                 }catch (Exception e){}
