@@ -158,7 +158,7 @@ public class Player implements Runnable{
                             hand.add(card); // Add the card to the hand array
                         }
                         System.out.println(); //new line
-                        text.typeOfTable(typeOfTable); //Carsten
+                        text.typeOfTable(typeOfTable);
                         if(hand.isEmpty()){
                             System.out.println("you have no more cards left you can only call punch, so press (p)");
                         }else{
@@ -243,7 +243,6 @@ public class Player implements Runnable{
                     }
                 }
                 //play again or quit.... maybe return to lobby
-                // Carsten skal lave systemprint til spillet er slut
 
                 table.query(new ActualField("gameHasEnded"));
                 text.gameDone();
