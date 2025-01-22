@@ -95,6 +95,11 @@ public class Player implements Runnable{
                             // & print it
                         }
                         System.out.println(); //new line
+                        for (Object[] tuple : cards) {
+                            Card card = (Card) tuple[1]; // Extract the Card object from the tuple
+                           // System.out.print((handCounter + 1) + ")" + " " + card.toString() + ", "); // Display the card (1-based index)
+                            hand.add(card); // Add the card to the hand array
+                        }
 
                         int cardChoice = selectCard(hand, cards, playerInput);
                         while (true) {
@@ -146,6 +151,11 @@ public class Player implements Runnable{
                             Card card = (Card) tuple[1]; //find the card part of the tuple
                             System.out.print(handCounter + ")" + " " + card.toString() + komma + " ");
                             // & print it
+                        }
+                        for (Object[] tuple : cards) {
+                            Card card = (Card) tuple[1]; // Extract the Card object from the tuple
+                           // System.out.print((handCounter + 1) + ")" + " " + card.toString() + ", "); // Display the card (1-based index)
+                            hand.add(card); // Add the card to the hand array
                         }
                         System.out.println(); //new line
                         text.typeOfTable(typeOfTable); //Carsten
@@ -314,11 +324,6 @@ made for testing purposes
         }
     }
         private int selectCard(List<Card> hand, List<Object[]> cards, Scanner playerInput) {
-        for (Object[] tuple : cards) {
-            Card card = (Card) tuple[1]; // Extract the Card object from the tuple
-           // System.out.print((handCounter + 1) + ")" + " " + card.toString() + ", "); // Display the card (1-based index)
-            hand.add(card); // Add the card to the hand array
-        }
         text.playCard();
         return playerInput.nextInt() - 1; // Return 0-based index (subtract 1 for array indexing)
     }
