@@ -33,7 +33,6 @@ public class test1 {
             RemoteSpace spaceTables = new RemoteSpace( "tcp://" + ip+":"+ postalCode +"/table?keep");
              // Start a new thread for the game lobby
             new Thread(new Lobby(ip, postalCode)).start();
-            //Player player0 = new Player("frank", "frank1");
             userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
             // Wait until the user identity is received
             while (true) {
