@@ -494,7 +494,4 @@ public class Dealer implements Runnable {
             System.out.println("Error while returning cards: " + e.getMessage());
         }
     }
-
-
-    
 }
