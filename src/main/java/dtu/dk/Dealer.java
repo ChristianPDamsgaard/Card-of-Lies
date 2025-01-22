@@ -92,8 +92,8 @@ public class Dealer implements Runnable {
             text.gameStart();
             dealCards(privateSpaceOfPlayer0, handSize,deck); //the hand size is currently 4
             dealCards(privateSpaceOfPlayer1, handSize,deck);
-            //dealCards(privateSpaceOfPlayer2, handSize,deck);
-            //dealCards(privateSpaceOfPlayer3, handSize,deck);
+            dealCards(privateSpaceOfPlayer2, handSize,deck);
+            dealCards(privateSpaceOfPlayer3, handSize,deck);
 
             //dealCards(privateSpaceOfPlayer4, handSize);
             //dealCards(privateSpaceOfPlayer5, handSize);

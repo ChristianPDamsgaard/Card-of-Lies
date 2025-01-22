@@ -6,6 +6,7 @@ import org.jspace.RemoteSpace;
 import org.jspace.SequentialSpace;
 
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class Host implements  Runnable{
     RemoteSpace userInputSpace;
@@ -30,18 +31,43 @@ public class Host implements  Runnable{
         try {
             userInputSpace = new RemoteSpace("tcp://" + ip+":"+ postalCode +"/userInput?keep");
             spaceTables = new RemoteSpace("tcp://" + ip+":"+ postalCode +"/table?keep");
-            new Thread(new Lobby(ip, postalCode)).start();
-            userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
+            System.out.println("Welcome host press h to get your options");
+            userInputSpace.put("hostResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
+            TimeUnit.MILLISECONDS.sleep(50);
+            Object[] userResponseToIdentity = userInputSpace.get(new ActualField("hostResponse"), new FormalField(String.class));
+            String identityResponse = (String) userResponseToIdentity[1];
             while (true) {
-                Object[] result = userInputSpace.getp(new ActualField("personHaveId"), new FormalField(String.class));
-                if (result != null) {
-                    id = (String) result[1];
-                    break;
+                try {
+                    if (identityResponse.equals("h")) {
+                        //???
+                        //blah blah blah
+                        text.welcomeHost();
+                        userInputSpace.put("personHaveId", "host");
+                        break;
+                    } else {
+                        //error type again
+                        text.wrongText();
+                        userInputSpace.put("personDoNotHaveId");
+                        System.out.println("Welcome host press h to get your options");
+                        userInputSpace.put("hostResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
+                    }
+                    userResponseToIdentity = userInputSpace.get(new ActualField("hostResponse"), new FormalField(String.class));
+                    identityResponse = (String) userResponseToIdentity[1];
+                }catch (Exception e) {
                 }
-                if(userInputSpace.getp(new ActualField("personDoNotHaveId")) != null){
-                    userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
-                }
-            }if (id.equals("host")) {
+            }
+            while (true){
+                try{
+                    Object[] result = userInputSpace.getp(new ActualField("personHaveId"), new FormalField(String.class));
+                    if (result != null) {
+                        id = (String) result[1];
+                        break;
+                    }else if(userInputSpace.getp(new ActualField("personDoNotHaveId")) != null){
+                        userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
+                    }
+                }catch (Exception e){}
+            }
+            if (id.equals("host")) {
                 hostChoice();
             }
         }catch (Exception e){

@@ -53,10 +53,13 @@ public class test2 {
                 System.out.println("yaaaaay ^ _ ^");
 
             }else if (id.equals("host")) {
-                do {
-                    text.hostInstructions();
-                    userInputSpace.put("hostChoice", userInput.nextLine());
-                } while (spaceTables.queryp(new ActualField("gameHasStarted")) == null);
+                while (true){
+                    do {
+                        text.hostInstructions();
+                        userInputSpace.put("hostChoice", userInput.nextLine());
+                    } while (spaceTables.queryp(new ActualField("gameHasStarted")) == null);
+                    spaceTables.get(new ActualField("restart"));
+                }
             }
         }catch (Exception e){
             System.out.println(e.getMessage());

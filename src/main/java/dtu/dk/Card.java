@@ -16,7 +16,7 @@ public class Card {
     public  ArrayList<Card> deck(){ //forms a deck of cards from the different cards, with each rank having 6 identical cards.
         ArrayList<Card> deck = new ArrayList<>();
         for(Rank Rank:Rank.values()){
-            for(int i = 0; i<6;i++){
+            for(int i = 0; i<8;i++){
                 deck.add(new Card(Rank));
             }
         }
