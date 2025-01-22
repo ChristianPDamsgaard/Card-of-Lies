@@ -323,9 +323,22 @@ made for testing purposes
             return false;
         }
     }
-        private int selectCard(List<Card> hand, List<Object[]> cards, Scanner playerInput) {
-        text.playCard();
-        return playerInput.nextInt() - 1; // Return 0-based index (subtract 1 for array indexing)
+    private int selectCard(List<Card> hand, List<Object[]> cards, Scanner playerInput) {
+        while (true) { // Loop until valid input is provided
+            text.playCard(); // Prompt the user to play a card
+            String input = playerInput.next(); // Read the input as a String
+    
+            try {
+                int number = Integer.parseInt(input); // Try to convert the input to an integer
+                if (number >= 1 && number <= hand.size()) { // Check if the number is within valid range
+                    return number - 1; // Return 0-based index (subtract 1 for array indexing)
+                } else {
+                    System.out.println("Invalid choice. Please enter a number between 1 and " + hand.size() + ".");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+            }
+        }
     }
 }
 
