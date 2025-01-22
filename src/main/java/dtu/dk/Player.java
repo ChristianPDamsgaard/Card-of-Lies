@@ -83,7 +83,7 @@ public class Player implements Runnable{
                         List<Card> hand = new ArrayList<>();
                         int handCounter = 0;
                         //Card[] hand = new Card[cards.size()]; // this should create an array which has your cards it will make the following easier
-                        text.typeOfTable(typeOfTable); //Carsten skal lave noget text omkring hvad man skal gøre udfra den info ovenover
+                        text.typeOfTable(typeOfTable);
                         for (Object[] tuple : cards) {
                             handCounter++;
                             Card card = (Card) tuple[1]; //find the card part of the tuple

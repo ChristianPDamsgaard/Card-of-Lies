@@ -162,6 +162,37 @@ public class Dealer implements Runnable {
                     //reports to a space, (playerMove, the id of player, the seat of player, what player did, if player punch or cards)
                     //gameSpace.put("playerMove", currentPlayer[0], currentPlayer[1], playerMove[1], playerMove[2]);
                     gameSpace.get(new ActualField("playerMove"), new ActualField(currentPlayer[0]), new ActualField(currentPlayer[1]), new FormalField(String.class), new FormalField(String.class));
+                    deathCount = tableSpace.getp(new ActualField("DeathcountUp"));
+                    if(deathCount != null){
+                        peopleAlive --;
+                    }
+                    if(peopleAlive == 1){
+                        previousPrivatePlayerSpace.put("doAction",(String)prevPlayer[0], false);
+                        currentPrivatePlayerSpace.put("doAction",(String)currentPlayer[0], false);
+                        while(true)
+                        {
+                            deathCount = currentPrivatePlayerSpace.getp(new ActualField("DeathcountUp"));
+                            if(deathCount != null){
+                                peopleAlive --;
+                            }
+                            whichPlayerTurn((turnCounter%seats));
+                            deathPlaceHolder = currentPrivatePlayerSpace.query(new ActualField("youDied"),new ActualField(currentPlayer[2]),new ActualField(currentPlayer[0]), new FormalField(Boolean.class));
+                            if(deathPlaceHolder[3].equals(true)){ //mangler condition
+                                turnCounter++;
+                            }else {
+                                //announce win
+                                //something about a player has won
+                                gameState = false;
+                                previousPrivatePlayerSpace.put("doAction",prevPlayer[0], false);
+                                previousPrivatePlayerSpace.put("otherPunchResult",false);
+                                text.gameEnd(); //Potential Carsten
+                                tableSpace.get(new ActualField("gameHasStarted"));
+                                tableSpace.put("gameHasEnded");
+                                break;
+                            }
+                        }
+                        break;
+                    }
                     previousPrivatePlayerSpace = currentPrivatePlayerSpace;
                     prevPlayer = currentPlayer;
                     turnCounter++;
