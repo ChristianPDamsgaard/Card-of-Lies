@@ -32,6 +32,9 @@ public class test1 {
             RemoteSpace userInputSpace = new RemoteSpace("tcp://" + ip+":"+ postalCode + "/userInput?keep");
             RemoteSpace spaceTables = new RemoteSpace( "tcp://" + ip+":"+ postalCode +"/table?keep");
              // Start a new thread for the game lobby
+            System.out.println("waiting for lock");
+            spaceTables.get(new ActualField("lock"));
+            System.out.println("lock has been taken");
             new Thread(new Lobby(ip, postalCode)).start();
             userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
             // Wait until the user identity is received
@@ -52,7 +55,8 @@ public class test1 {
                 spaceTables.put("addPlayer");
                 spaceTables.get(new ActualField("userHasConnected"));
                 System.out.println("yaaaaay ^ _ ^");
-
+                System.out.println("lock has been put back");
+                spaceTables.put("lock");
             }else if (id.equals("host")) {
                 while (true){
                     do {

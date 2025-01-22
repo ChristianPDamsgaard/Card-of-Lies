@@ -21,7 +21,7 @@ public class test {
 
     public static void main(String[] args) {
         // ip = "localhost"; // run this if one on computer
-        ip = "172.20.10.2";// run this different computers wanna play
+        ip = "localhost";// run this different computers wanna play
         postalCode = "42069";
         // add the tableSpace to main space
         // make server option available
@@ -32,6 +32,9 @@ public class test {
             RemoteSpace userInputSpace = new RemoteSpace("tcp://" + ip + ":" + postalCode + "/userInput?keep");
             RemoteSpace spaceTables = new RemoteSpace("tcp://" + ip + ":" + postalCode + "/table?keep");
             // Start a new thread for the game lobby
+            System.out.println("waiting for lock");
+            spaceTables.get(new ActualField("lock"));
+            System.out.println("lock has been taken");
             new Thread(new Lobby(ip, postalCode)).start();
 
             userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
@@ -54,6 +57,8 @@ public class test {
                 spaceTables.put("addPlayer");
                 spaceTables.get(new ActualField("userHasConnected"));
                 System.out.println("yaaaaay ^ _ ^");
+                System.out.println("lock has been put back");
+                spaceTables.put("lock");
 
             } else if (id.equals("host")) {
                 while (true) {
