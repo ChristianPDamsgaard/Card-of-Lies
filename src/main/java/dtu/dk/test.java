@@ -31,8 +31,12 @@ public class test {
         try {
             RemoteSpace userInputSpace = new RemoteSpace("tcp://" + ip+":"+ postalCode + "/userInput?keep");
             RemoteSpace spaceTables = new RemoteSpace( "tcp://" + ip+":"+ postalCode +"/table?keep");
+            System.out.println("waiting for lock");
+            spaceTables.get(new ActualField("lock"));
+            System.out.println("lock has been taken");
                 new Thread(new Lobby(ip, postalCode)).start();
                 //Player player0 = new Player("frank", "frank1");
+
                 userInputSpace.put("userIdentityResponse", userInput.nextLine().toLowerCase().replaceAll(" ", ""));
                 while (true) {
                     Object[] result = userInputSpace.getp(new ActualField("personHaveId"), new FormalField(String.class));
@@ -50,6 +54,8 @@ public class test {
                     spaceTables.put("addPlayer");
                     spaceTables.get(new ActualField("userHasConnected"));
                     System.out.println("yaaaaay ^ _ ^");
+                    System.out.println("lock has been put back");
+                    spaceTables.put("lock");
 
                 }else if (id.equals("host")) {
                     while (true){

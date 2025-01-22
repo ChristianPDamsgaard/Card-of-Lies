@@ -44,6 +44,11 @@ public class Main {
         new Thread(new Dealer(tableSpace, userInputSpace,guestRegistry, ip, postalCode)).start();
         new Thread(new Host(ip, postalCode)).start();
         Scanner userInput = new Scanner(System.in);
+        try {
+            tableSpace.put("lock");
+        }catch (Exception e){
+
+        }
 
         while(true){
             try {
