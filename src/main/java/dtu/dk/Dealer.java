@@ -268,7 +268,6 @@ public class Dealer implements Runnable {
                 }
                 tableSpace.get(new ActualField("tableType"), new FormalField(String.class));
             }
-            tableSpace.put("restart");
             guestlistSpace.getAll(new FormalField(String.class), new FormalField(Integer.class), new FormalField(String.class),new FormalField(String.class), new ActualField("guest"));
         } catch (Exception e) {
             // TODO: handle exception

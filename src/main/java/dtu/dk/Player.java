@@ -233,21 +233,6 @@ public class Player implements Runnable{
 
                 table.query(new ActualField("gameHasEnded"));
                 text.gameDone();
-                while(true) {
-                    String endMessage = playerInput.nextLine().toLowerCase();
-                    if (endMessage.equals("a")) { //a for again
-                        table.put("playAgain",playerId, playerName, url);
-                        mySpace.put("youDied",playerName,playerId,false);
-                        break;
-                    } else if (endMessage.equals("e")) { //e for end
-                        endGame = true;
-                        //Carsten tak for spillet
-                        break;
-                    } else {
-                        text.gameDone();
-                        //Carsten du skrev ingen passende besked
-                    }
-                }
                 if(endGame){
                     break;
                 }
