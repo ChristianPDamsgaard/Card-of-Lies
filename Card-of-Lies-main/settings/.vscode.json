@@ -1,9 +1,0 @@
-{
-    "java.configuration.runtimes": [
-        {
-            "name": "JavaSE-19",
-            "path": "/path/to/jdk/",
-            "default": true
-        }
-    ]
-}
