@@ -149,12 +149,16 @@ public class Player implements Runnable{
                         }
                         System.out.println(); //new line
                         text.typeOfTable(typeOfTable); //Carsten
-                        text.chooseOption();
+                        if(hand.isEmpty()){
+                            System.out.println("you have no more cards left you can only call punch, so press (p)");
+                        }else{
+                            text.chooseOption();
+                        }
                         action = playerInput.nextLine();
 
                         while (true) {
                             
-                            if (action.equals("c")) {
+                            if (action.equals("c") && !hand.isEmpty()) {
                                 int cardChoice = selectCard(hand, cards, playerInput);
                                 while (true) {
                                     if (cardChoice < 0 || cardChoice >= hand.size()) {
