@@ -29,13 +29,7 @@ public class Lobby implements  Runnable{
             try {
                 Object[] userResponseToIdentity = userInputSpace.get(new ActualField("userIdentityResponse"), new FormalField(String.class));
                 String identityResponse = (String) userResponseToIdentity[1];
-                if(identityResponse.equals("h")){
-                    //???
-                    //blah blah blah
-                    text.welcomeHost();
-                    userInputSpace.put("personHaveId", "host");
-                    break;
-                }else if(identityResponse.equals("p")){
+                if(identityResponse.equals("p")){
                     //make player
                     //blah blah blah
                     text.welcomePlayer();

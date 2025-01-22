@@ -66,7 +66,7 @@ public class TextClassForAllText {
         String welcome = "Welcome to my humble abode, what kind of person are you dear?";
         smoothText(welcome);
         System.out.println();
-        System.out.println("\u001B[0mPlease type h for host and p for participant.");
+        System.out.println("\u001B[0mPlease type p for participant.");
     }
     void welcomeHost(){
         String welcome = "Welcome back to the abode master.";
