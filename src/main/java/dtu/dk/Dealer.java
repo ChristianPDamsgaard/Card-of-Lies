@@ -153,7 +153,7 @@ public class Dealer implements Runnable {
                 whichPlayerTurn(turnCounter % seats);
                 text.printPlayerInfo((String) currentPlayer[2], (String) currentPlayer[0], (String) currentPlayer[3]);
                 deathPlaceHolder = currentPrivatePlayerSpace.query(new ActualField("youDied"),new ActualField(currentPlayer[2]),new ActualField(currentPlayer[0]), new FormalField(Boolean.class));
-                if(deathPlaceHolder[3].equals(true)){ //mangler condition
+                if(deathPlaceHolder[3].equals(true)){
                     turnCounter++;
                 }else {
                     text.printPlayerInfo((String) currentPlayer[2], (String) currentPlayer[0], (String) currentPlayer[3]);
@@ -177,7 +177,7 @@ public class Dealer implements Runnable {
                             }
                             whichPlayerTurn((turnCounter%seats));
                             deathPlaceHolder = currentPrivatePlayerSpace.query(new ActualField("youDied"),new ActualField(currentPlayer[2]),new ActualField(currentPlayer[0]), new FormalField(Boolean.class));
-                            if(deathPlaceHolder[3].equals(true)){ //mangler condition
+                            if(deathPlaceHolder[3].equals(true)){
                                 turnCounter++;
                             }else {
                                 //announce win
