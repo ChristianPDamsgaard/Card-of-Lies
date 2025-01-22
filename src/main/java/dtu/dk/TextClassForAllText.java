@@ -7,44 +7,28 @@ public class TextClassForAllText {
 
     }
 
-    void smoothText(String myString){ //for later
+    void smoothText(String myString){ //used to make it seem as if the text is being written
         for(int i = 0; i < myString.length();i++){
             System.out.print(myString.charAt(i));
             try{
                 TimeUnit.MILLISECONDS.sleep(25);
 
-            } catch(Exception e){
-
-            }
+            } catch(Exception e){}
         }
-
     }
-    void smoothTextFast(String myString){ //for later
+    void smoothTextFast(String myString){ //faster version of smoothText
         for(int i = 0; i < myString.length();i++){
             System.out.print(myString.charAt(i));
             try{
                 TimeUnit.MILLISECONDS.sleep(10);
 
-            } catch(Exception e){
-
-            }
+            } catch(Exception e){}
         }
-
-    }
-    void printCards(char[] cards){ //May not be needed
-        System.out.print("[");
-        for(int i = 0; i<cards.length; i++){
-            if(i < cards.length-1){
-                System.out.print(cards[i] + ", ");
-            } else {
-                System.out.print(cards[i]);
-            }
-        }
-        System.out.print("]");
     }
 
-
-
+    //Each function is used in the category they are under
+    //For example is seatTaken used under the Main class
+    //Most are used simply to add the smoothText effect
 
     // Main
     void seatTaken(){
@@ -57,8 +41,6 @@ public class TextClassForAllText {
         smoothText(message);
         System.out.println();
     }
-
-
 
 
     // Lobby
@@ -91,8 +73,6 @@ public class TextClassForAllText {
         smoothText(idText);
         System.out.println();
     }
-
-
 
 
     // Player
@@ -161,8 +141,6 @@ public class TextClassForAllText {
     }
 
 
-
-
     // Dealer
     void gameStart(){
         String startMessage = "Game starts!";
@@ -208,17 +186,8 @@ public class TextClassForAllText {
     }
 
 
-
-
-    // host
+    // Host
     void hostInstructions(){
         System.out.println("As Host you can start the game ('s') or see information on contestants ('p')"); // Carsten can fylde bagefter!
-    /* HVAD KAN HOSTEN? 
-     * starte spillet? (aktiver dealer)- s
-     * Se spillere og deres information (id, sædenummer & navn)- p
-    */
     }
-
-    
-
 }

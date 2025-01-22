@@ -3,7 +3,7 @@ package dtu.dk;
 import java.util.ArrayList;
 
 public class Card {
-    public enum Rank{JACK, QUEEN, KING, ACE};       // OBS ADD JOKERS LATER, NOTE THAT THERE MUST BE ONLY 2 JOKERS
+    public enum Rank{JACK, QUEEN, KING, ACE};      
     public Rank rank;
     
 
@@ -29,7 +29,7 @@ public class Card {
     }
 
     @Override
-    public String toString() {
+    public String toString() { //Overrides the standard tostring for objects
         return rank.toString();
     }
 
@@ -38,18 +38,13 @@ public class Card {
         this.rank = rank;
     }
     @Override
-    public boolean equals(Object obj) { //// forgot about this completely, very important!
+    public boolean equals(Object obj) { //// Overrides the standard equals
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Card card = (Card) obj;
         return rank.equals(card.rank);
     }
 
-/*     public int getValue(boolean aceAsHigh) { //needs to return a value depending if the ace is highest or lowest
-        if ("Ace".equals(rank.getName())) { // Check if it's an Ace
-            return aceAsHigh ? rank.getSecondaryValue() : rank.getPrimaryValue(); // the "?" and ":" is an (if-else) statement, which means that if aceAsHigh is correct return the second Value (the higher) otherwise return the smaller primary value. 
-        }
-        return rank.getPrimaryValue(); //if its not ace, then return its value.
-    }  */
+
 
 }
