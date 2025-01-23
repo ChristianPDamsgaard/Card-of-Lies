@@ -99,6 +99,23 @@ public class Dealer implements Runnable {
             //dealCards(privateSpaceOfPlayer4, handSize);
             //dealCards(privateSpaceOfPlayer5, handSize);
             while(true){
+                //determine type of table
+                int tableInt = random.nextInt(1,5);
+                switch (tableInt){
+                    case 1:
+                        typeOfTable = "KING";
+                        break;
+                    case 2:
+                        typeOfTable = "QUEEN";
+                        break;
+                    case 3:
+                        typeOfTable = "ACE";
+                        break;
+                    case 4:
+                        typeOfTable = "JACK";
+                        break;
+                }
+                tableSpace.put("tableType", typeOfTable);
                 prevPlayerMove = "";
                 if(peopleAlive == 1){
                     //if only one is alive unfreeze the previous and this player
@@ -130,23 +147,7 @@ public class Dealer implements Runnable {
                     }
                     break;
                 }
-                //determine type of table
-                int tableInt = random.nextInt(1,5);
-                switch (tableInt){
-                    case 1:
-                        typeOfTable = "KING";
-                        break;
-                    case 2:
-                        typeOfTable = "QUEEN";
-                        break;
-                    case 3:
-                        typeOfTable = "ACE";
-                        break;
-                    case 4:
-                        typeOfTable = "JACK";
-                        break;
-                }
-                tableSpace.put("tableType", typeOfTable);
+
                 //check for dead players
                 deathCount = tableSpace.getp(new ActualField("DeathcountUp"));
                 if(deathCount != null){

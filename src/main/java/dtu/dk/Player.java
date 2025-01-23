@@ -54,7 +54,6 @@ public class Player implements Runnable{ //creates everything the player needs
                     //might need lock
                     //check for turn
                     text.turnReceived();
-
                     mySpace.put("canIAction", playerId); //checks if it is possible to do action
                     Object[] actionOne = mySpace.get(new ActualField("doAction"), new ActualField(playerId), new FormalField(Boolean.class));
                     if(!((Boolean)actionOne[2])){ //if you can't do action skip all this
@@ -62,6 +61,11 @@ public class Player implements Runnable{ //creates everything the player needs
                     }
                     Object[] whichType = table.query(new ActualField("tableType"), new FormalField(String.class));
                     typeOfTable = (String) whichType[1];
+                    Object[] gameHasEnded = table.getp(new ActualField("gameHasEnded"));
+                    TimeUnit.MILLISECONDS.sleep(25);
+                    if(gameHasEnded != null){
+                        break;
+                    }
 
                     Object[] typeOfTurn = mySpace.get(new ActualField("turnType"), new FormalField(Boolean.class));
 
@@ -69,8 +73,6 @@ public class Player implements Runnable{ //creates everything the player needs
                         Object[] checkForFirstTurn = mySpace.getp(new ActualField("youAreFirstTurner"), new FormalField(String.class));
                         text.firstTurn();
                         String typeOfTable = (String) checkForFirstTurn[1];
-                        
-                 
 
                         List<Object[]> cards = mySpace.queryAll(new ActualField("Card"), new FormalField(Card.class)); //find all tuples named "Card"
                         List<Card> hand = new ArrayList<>(); //create a list of cards that is in your hand
