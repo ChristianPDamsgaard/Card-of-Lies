@@ -361,8 +361,9 @@ public class Dealer implements Runnable {
 
                 //check if enemy lied or told the truth
                 if(prevPlayerMove.equals(typeOfTable)){
-                    currentPrivatePlayerSpace.put("punchResult", true);
                     previousPrivatePlayerSpace.put("otherPunchResult",false);
+                    currentPrivatePlayerSpace.put("punchResult", true);
+
 
                 }else{
                     currentPrivatePlayerSpace.put("punchResult", false);
