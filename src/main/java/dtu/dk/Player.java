@@ -180,6 +180,7 @@ public class Player implements Runnable{ //creates everything the player needs
                                 Object[] actionResult = mySpace.get(new ActualField("punchResult"), new FormalField(Boolean.class));
 
                                 if((Boolean) actionResult[1]){ // if it is true, shot yourself
+                                    System.out.println("the other player didn't lie");
                                     if (!roulette(gunChamper)) { // doesn't hit, increase odds
                                         gunChamper--; 
                                     } else { // hits, you're dead!
@@ -201,13 +202,13 @@ public class Player implements Runnable{ //creates everything the player needs
                         otherPlayerResult = mySpace.get(new ActualField("otherPunchResult"), new FormalField(Boolean.class)); 
 
                         if((Boolean)otherPlayerResult[1]){ //same as before just outside the loop
+                            System.out.println("the other player called out your lie");
                             if (!roulette(gunChamper)) {
                                 gunChamper--; 
                                 
                             } else {
                                 //person død
                                 mySpace.get(new ActualField("youDied"), new ActualField(playerName), new ActualField(playerId), new ActualField(false));
-                                
                                 mySpace.put("youDied", playerName, playerId, true);
                                 mySpace.put("DeathcountUp");
                                 table.put("DeathcountUp");
